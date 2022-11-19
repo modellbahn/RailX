@@ -1,0 +1,28 @@
+{
+  "name": "railx",
+  "version": "1.0.0",
+  "description": "Steuere deine Modellbahn über den PC",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/modellbahn/RailX.git"
+  },
+  "keywords": [
+    "railx",
+    "modellbahn",
+    "railway",
+    "modelrailway"
+  ],
+  "author": "greencoder001",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/modellbahn/RailX/issues"
+  },
+  "homepage": "https://github.com/modellbahn/RailX#readme",
+  "dependencies": {
+    "modellbahn": "^2.1.0"
+  }
+}
