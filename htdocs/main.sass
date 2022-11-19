@@ -1,0 +1,119 @@
+// Font
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata&display=swap')
+
+// Colors  
+$red: #b83434
+$red2: #cc5858
+$white: #fff
+
+// Default Settings
+*
+    box-sizing: border-box
+    padding: 0
+    margin: 0
+    font-family: 'Inconsolata', monospace
+
+// Layout
+main
+    width: 100vw
+    height: 100vh
+    position: relative
+
+    .left-main-section
+        width: 70%
+        height: 100%
+        position: absolute
+        top: 0
+        left: 0
+        border-right: 2px solid $red
+
+        .left-top-main-section
+            position: absolute
+            top: 0
+            left: 0
+            height: 60vh
+            width: 70vw
+            border-bottom: 2px solid $red
+            display: flex
+            justify-content: center
+            align-content: center
+
+            .navbar
+                border-right: 2px solid $red
+                width: 5vw
+                height: 60vh
+            
+            .gleisstellpult
+                width: 65vw
+                height: 60vh
+        
+        .left-bottom-main-section
+            position: absolute
+            bottom: 0
+            left: 0
+            height: 40vh
+            width: 70vw
+            display: flex
+            justify-content: center
+            align-items: center
+
+            .day-night
+                width: 23.3333333333333333333333vw
+                height: 40vh
+                border-right: 2px solid $red
+            
+            .lights
+                width: 23.3333333333333333333333vw
+                height: 40vh
+                border-right: 2px solid $red
+
+            .auto-manual-mode-selector
+                width: 23.3333333333333333333333vw
+                height: 40vh
+
+
+    .right-main-section
+        width: 30%
+        height: 100%
+        position: absolute
+        top: 0
+        right: 0
+
+        display: flex
+        align-content: center
+        justify-content: center
+        flex-direction: column
+
+        .section-lok1
+            border-bottom: 2px solid $red
+            width: 30vw
+            height: 33.33333333333333333333333vh
+        .section-lok2
+            border-bottom: 2px solid $red
+            width: 30vw
+            height: 33.33333333333333333333333vh
+        .section-lok3
+            width: 30vw
+            height: 33.33333333333333333333333vh
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+.navbar
+    ul
+        display: flex
+        justify-content: space-evenly
+        align-items: center
+        flex-direction: column
+        height: 60vh
+        width: 5vw
+        li
+            list-style: none
+            padding: 15%
+            font-size: 200%
+            color: $red2
+
+            &:hover
+                color: $red
+                cursor: pointer
