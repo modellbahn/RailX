@@ -1,10 +1,14 @@
 // Font
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata&display=swap')
+html
+    font-size: calc(15px + 0.390625vw)
 
 // Colors  
 $red: #b83434
 $red2: #cc5858
-$white: #fff
+$white: #000
+$gray: #484848
+$black: #000
 
 // Default Settings
 *
@@ -111,9 +115,50 @@ main
         li
             list-style: none
             padding: 15%
-            font-size: 200%
+            font-size: 1.2rem
             color: $red2
 
             &:hover
                 color: $red
                 cursor: pointer
+
+.flexday
+    display: flex
+    justify-content: space-evenly
+    align-items: center
+    flex-direction: column
+    height: 100%
+    .timeicon
+        font-size: 7rem
+
+        i
+            &.fa-sun
+                color: #d5c406
+            &.fa-moon
+                color: #031761
+    .timespan
+        font-size: 1.3rem
+        padding-left: 5%
+        padding-right: 5%
+    .time-adjust
+        display: flex
+        align-items: center
+
+        i
+            font-size: 1.05rem
+            color: $gray
+            &:hover
+                cursor: pointer
+                color: $black
+    .dntogglers
+        display: flex
+        align-items: center
+        justify-content: space-around
+        width: 50%
+        padding-top: 5%
+        i
+            font-size: 1.1rem
+            color: $gray
+            &:hover
+                cursor: pointer
+                color: $black
