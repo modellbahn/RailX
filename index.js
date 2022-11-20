@@ -12,7 +12,7 @@ deb.folder(path.join(__dirname, '.DeBSON'))
 app.use(express.static(path.join(__dirname, 'htdocs')))
 
 io.on('connection', (socket) => {
-    // Client connected
+  // Client connected
 })
 
 server.listen(80, () => {

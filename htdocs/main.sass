@@ -6,9 +6,11 @@ html
 // Colors  
 $red: #b83434
 $red2: #cc5858
-$white: #000
+$white: #fff
 $gray: #484848
 $black: #000
+$green: #3ca137
+$green2: #2c7128
 
 // Default Settings
 *
@@ -62,12 +64,12 @@ main
             align-items: center
 
             .day-night
-                width: 23.3333333333333333333333vw
+                width: 18.6666666666666666666666vw
                 height: 40vh
                 border-right: 2px solid $red
             
             .lights
-                width: 23.3333333333333333333333vw
+                width: 28vw
                 height: 40vh
                 border-right: 2px solid $red
 
@@ -104,6 +106,7 @@ main
 //////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
 
+// Navbar
 .navbar
     ul
         display: flex
@@ -122,6 +125,7 @@ main
                 color: $red
                 cursor: pointer
 
+// Day/Night Switch
 .flexday
     display: flex
     justify-content: space-evenly
@@ -162,3 +166,97 @@ main
             &:hover
                 cursor: pointer
                 color: $black
+
+// Lightcontrol
+
+// Script Chooser
+.auto-manual-mode-selector
+    display: flex
+    flex-direction: column
+    justify-content: space-evenly
+    align-items: center
+    height: 100%
+    width: 100%
+    text-align: center
+
+    .activated-script-container, .always-running-scripts-container
+        h4
+            font-size: 0.8rem
+
+
+    .driving-mode-select-container
+        font-size: 0.6rem
+
+    .add-new-script-btn
+        color: $green
+        &:hover
+            cursor: pointer
+            color: $green2
+
+    .label
+        pointer-events: none
+        display: flex
+        align-items: center
+
+    .switch
+        pointer-events: all
+        cursor: pointer
+
+    .input
+        &:checked + .label .left, &:not(:checked) + .label .right
+            pointer-events: all
+            cursor: pointer
+
+        display: none
+
+
+    .switch
+        position: relative
+        display: inline-block
+        width: 60px
+        height: 34px
+
+    .slider
+        position: absolute
+        cursor: pointer
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        background-color: #ccc
+        -webkit-transition: 0.4s
+        transition: 0.4s
+
+        &:before
+            position: absolute
+            content: ""
+            height: 26px
+            width: 26px
+            left: 4px
+            bottom: 4px
+            background-color: $white
+            -webkit-transition: 0.4s
+            transition: 0.4s
+
+    input
+        &:checked + .label .slider
+            background-color: $red
+
+        &:focus + .label .slider
+            box-shadow: 0 0 1px $red
+
+        &:checked + .label .slider:before
+            -webkit-transform: translateX(26px)
+            -ms-transform: translateX(26px)
+            transform: translateX(26px)
+
+    .slider.round
+        border-radius: 34px
+
+        &:before
+            border-radius: 50%
+
+    .left, .right
+        margin: 0 .5em
+        &.selected
+            font-weight: bold

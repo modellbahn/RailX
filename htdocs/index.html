@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="/icon.png">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/greencoder001/queryjs@latest/dist/query.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
         integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -25,7 +26,7 @@
                     </ul>
                 </div>
                 <div class="gleisstellpult">
-                    <h1 style="text-align:center;padding-top:25%;color:#b83434">Hier könnt Ihr Gleisstellpult stehen</h1>
+                    <h1 style="text-align:center;padding-top:25%;color:#b83434">Hier könnte Ihr Gleisstellpult stehen</h1>
                 </div>
             </div>
             <div class="left-bottom-main-section">
@@ -50,8 +51,32 @@
                         </div>
                     </div>
                 </div>
-                <div class="lights"></div>
-                <div class="auto-manual-mode-selector"></div>
+                <div class="lights">
+                    <h2 style="text-align:center;padding-top:40%;color:#b83434">Lichtsteuerung folgt noch</h2>
+                </div>
+                <div class="auto-manual-mode-selector">
+                    <div class="activated-script-container">
+                        <h4>Auszuführende Skripte: <i id="add-new-script-btn" class="add-new-script-btn fa-regular fa-square-plus"></i></h4>
+                    </div>
+                    <div class="always-running-scripts-container">
+                        <h4 title="Diese Skripte werden auch ausgeführt, wenn der manuelle Fahrmodus ausgewählt ist">Immer aktive Skripte: <i id="add-new-ar-script-btn" class="add-new-script-btn fa-regular fa-square-plus"></i></h4>
+                    </div>
+                    <div class="driving-mode-select-container">
+                        <h4>Fahrmodus: </h4>
+                        <br />
+                        <input class="input" id="driving-mode-select" type="checkbox">
+                        
+                        <label class="label" for="driving-mode-select">
+                            <div class="left selected">Skripte</div>
+                        
+                            <div class="switch">
+                                <span class="slider round"></span>
+                            </div>
+                        
+                            <div class="right">Manuell</div>
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="right-main-section">
