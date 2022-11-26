@@ -12,9 +12,19 @@ deb.folder(path.join(__dirname, '.DeBSON'))
 app.use(express.static(path.join(__dirname, 'htdocs')))
 
 io.on('connection', (socket) => {
-  // Client connected
+    // Client connected
+    socket.on('disconnect', () => {
+        // Client disconnected
+    })
+
+    // Remote Database
+    deb.bind(socket)
+
+    socket.on('ping', () => {
+        socket.emit('console-log', 'pong')
+    })
 })
 
 server.listen(80, () => {
-  console.log('listening on *:80')
+    console.log('listening on *:80')
 })
