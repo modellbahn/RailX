@@ -275,10 +275,86 @@ main
         justify-content: center
 
         .cs-left
-            width: 16vw
+            width: 17vw
             height: 33.3333333333vh
+            display: flex
+            align-items: center
+            justify-content: center
+
+            .track-control-section-lok
+                height: 33.3333333333vh
+                width: 14vw
+                display: flex
+                flex-direction: column
+                justify-content: center
+                align-items: center
+
+                .tcsl-signal
+                    width: 14vw
+                    height: 16.6666666666vh
+                    display: flex
+                    justify-content: center
+                    align-items: center
+
+                    svg
+                        width: 50%
+                        height: 100%
+
+                        .signal-select-icon-btn-green
+                            &:hover
+                                fill: $green2 !important
+                                cursor: pointer
+                        .signal-select-icon-btn-red
+                            &:hover
+                                fill: $red !important
+                                cursor: pointer
+
+                .tcsl-weiche
+                    width: 14vw
+                    height: 16.6666666666vh
+                    display: flex
+                    justify-content: center
+                    align-items: center
+
+                    svg
+                        width: 50%
+                        height: 100%
+
+                        .weiche-select-icon-btn-left
+                            &:hover
+                                fill: $red !important
+                                cursor: pointer
+                        .weiche-select-icon-btn-right
+                            &:hover
+                                fill: $red !important
+                                cursor: pointer
+
+            .button-section
+                height: 25vh
+                width: 3vw
+                display: flex
+                align-items: center
+                justify-content: space-between
+                flex-direction: column
+
+                .lok-action-btn
+                    color: $red
+                    opacity: 0.7
+                    &:hover
+                        cursor: pointer
+                        opacity: 1
+                
+                .lok-select-btn
+                    color: $red
+                    opacity: 0.7
+                    &:hover
+                        cursor: pointer
+                        opacity: 1
+                    &.selected
+                        opacity: 1
+
         .cs-right
-            width: 4vw
+            width: 3vw
             height: 33.3333333333vh
             display: flex
             justify-content: center

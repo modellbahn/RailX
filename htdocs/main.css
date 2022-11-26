@@ -266,11 +266,87 @@ main .right-main-section .section-lok3 {
   justify-content: center;
 }
 .section-lok .control-section .cs-left {
-  width: 16vw;
+  width: 17vw;
   height: 33.3333333333vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.section-lok .control-section .cs-left .track-control-section-lok {
+  height: 33.3333333333vh;
+  width: 14vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.section-lok .control-section .cs-left .track-control-section-lok .tcsl-signal {
+  width: 14vw;
+  height: 16.6666666666vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.section-lok .control-section .cs-left .track-control-section-lok .tcsl-signal svg {
+  width: 50%;
+  height: 100%;
+}
+.section-lok .control-section .cs-left .track-control-section-lok .tcsl-signal svg .signal-select-icon-btn-green:hover {
+  fill: #2c7128 !important;
+  cursor: pointer;
+}
+.section-lok .control-section .cs-left .track-control-section-lok .tcsl-signal svg .signal-select-icon-btn-red:hover {
+  fill: #b83434 !important;
+  cursor: pointer;
+}
+.section-lok .control-section .cs-left .track-control-section-lok .tcsl-weiche {
+  width: 14vw;
+  height: 16.6666666666vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.section-lok .control-section .cs-left .track-control-section-lok .tcsl-weiche svg {
+  width: 50%;
+  height: 100%;
+}
+.section-lok .control-section .cs-left .track-control-section-lok .tcsl-weiche svg .weiche-select-icon-btn-left:hover {
+  fill: #b83434 !important;
+  cursor: pointer;
+}
+.section-lok .control-section .cs-left .track-control-section-lok .tcsl-weiche svg .weiche-select-icon-btn-right:hover {
+  fill: #b83434 !important;
+  cursor: pointer;
+}
+.section-lok .control-section .cs-left .button-section {
+  height: 25vh;
+  width: 3vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+}
+.section-lok .control-section .cs-left .button-section .lok-action-btn {
+  color: #b83434;
+  opacity: 0.7;
+}
+.section-lok .control-section .cs-left .button-section .lok-action-btn:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+.section-lok .control-section .cs-left .button-section .lok-select-btn {
+  color: #b83434;
+  opacity: 0.7;
+}
+.section-lok .control-section .cs-left .button-section .lok-select-btn:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+.section-lok .control-section .cs-left .button-section .lok-select-btn.selected {
+  opacity: 1;
 }
 .section-lok .control-section .cs-right {
-  width: 4vw;
+  width: 3vw;
   height: 33.3333333333vh;
   display: flex;
   justify-content: center;
