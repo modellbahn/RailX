@@ -370,6 +370,49 @@ main
         position: absolute
         right: 0
         top: 0
+        display: flex
+        flex-direction: column
+        justify-content: space-around
+        align-items: center
+
+        .lok-choose-item-current,.lok-choose-item-previous,.lok-choose-item-next
+            width: 8vw
+            height: 9vh
+            display: flex
+            flex-direction: column
+            justify-content: space-between
+            align-items: center
+            .text
+                width: 8vw
+                height: 2vh
+                display: flex
+                justify-content: center
+                align-items: center
+                font-size: 0.7rem
+                font-weight: bold
+            .img
+                width: 8vw
+                height: 6vh
+                display: flex
+                justify-content: center
+                align-items: center
+                img
+                    max-width: 8vw
+                    max-height: 6vh
+        .lok-choose-item-previous
+            opacity: 0.12
+            .text
+                font-weight: 400   
+        .lok-choose-item-next
+            opacity: 0.12
+            .text
+                font-weight: 400
+        hr
+            background: $red
+            width: 8vw
+            border: none
+            outline: none
+            height: 0.08rem
 
 
 .slider
