@@ -120,3 +120,8 @@ window.deb = deb
 
 
 })());
+
+/*
+    https://stackoverflow.com/questions/51647948/change-the-selected-item-in-select-input-on-mouse-wheel-scrolling
+    https://hammerjs.github.io/getting-started/
+*/
