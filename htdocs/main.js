@@ -78,7 +78,45 @@ window.deb = deb
         $$('.daytimecyclelocked').inner(isLocked ? '<i class="fa-solid fa-lock"></i>' : '<i class="fa-solid fa-unlock"></i>')
     })
     const isLockedOnBoot = (await deb.cat('timecycler').obj('daytimecyclelocked').read()) || false
-    await deb.cat('timecycler').obj('daytimecyclelocked').write(isLockedOnBoot)
+    $$('.daytimecyclelocked').inner(isLockedOnBoot ? '<i class="fa-solid fa-lock"></i>' : '<i class="fa-solid fa-unlock"></i>')
+
+    // Driving Mode Chooser
+    const drivingModeOnBoot = (((await deb.cat('drivingmodeselect').obj('mode').read()) || 'manual') === 'script' ? false : true)
+    $$('#driving-mode-select').checked = drivingModeOnBoot
+    if (drivingModeOnBoot) {
+        $$('.driving-mode-select-container .left').removeClass('selected')
+        $$('.driving-mode-select-container .right').addClass('selected')
+
+        $$('.rms-manual').addClass('selected')
+        $$('.rms-auto').removeClass('selected')
+    } else {
+        $$('.driving-mode-select-container .right').removeClass('selected')
+        $$('.driving-mode-select-container .left').addClass('selected')
+
+        $$('.rms-manual').removeClass('selected')
+        $$('.rms-auto').addClass('selected')
+    }
+    await deb.cat('drivingmodeselect').obj('mode').watch(onoff => {
+        onoff = onoff || 'manual'
+        onoff = onoff === 'script' ? false : true
+        $$('#driving-mode-select').checked = onoff
+        if (onoff) {
+            $$('.driving-mode-select-container .left').removeClass('selected')
+            $$('.driving-mode-select-container .right').addClass('selected')
+
+            $$('.rms-manual').addClass('selected')
+            $$('.rms-auto').removeClass('selected')
+        } else {
+            $$('.driving-mode-select-container .right').removeClass('selected')
+            $$('.driving-mode-select-container .left').addClass('selected')
+
+            $$('.rms-manual').removeClass('selected')
+            $$('.rms-auto').addClass('selected')
+        }
+    })
+    $$('#driving-mode-select').on('input', async () => {
+        await deb.cat('drivingmodeselect').obj('mode').write($$('#driving-mode-select').checked ? 'manual' : 'script')
+    })
 
 
 })());

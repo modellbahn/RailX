@@ -26,8 +26,8 @@ main
     position: relative
 
     .left-main-section
-        width: 70%
-        height: 100%
+        width: 70vw
+        height: 100vh
         position: absolute
         top: 0
         left: 0
@@ -79,28 +79,38 @@ main
 
 
     .right-main-section
-        width: 30%
-        height: 100%
+        width: 30vw
+        height: 100vh
         position: absolute
         top: 0
         right: 0
 
-        display: flex
-        align-content: center
-        justify-content: center
-        flex-direction: column
+        .rms-manual,.rms-auto
+            width: 30vw
+            height: 100vh
+            display: none
+            &.selected
+                display: block !important
 
-        .section-lok1
-            border-bottom: 2px solid $red
-            width: 30vw
-            height: 33.33333333333333333333333vh
-        .section-lok2
-            border-bottom: 2px solid $red
-            width: 30vw
-            height: 33.33333333333333333333333vh
-        .section-lok3
-            width: 30vw
-            height: 33.33333333333333333333333vh
+        .rms-manual
+            .container-flex-help
+                width: 30vw
+                height: 100vh
+                display: flex
+                align-content: center
+                justify-content: center
+                flex-direction: column
+                .section-lok1
+                    border-bottom: 2px solid $red
+                    width: 30vw
+                    height: 33.33333333333333333333333vh
+                .section-lok2
+                    border-bottom: 2px solid $red
+                    width: 30vw
+                    height: 33.33333333333333333333333vh
+                .section-lok3
+                    width: 30vw
+                    height: 33.33333333333333333333333vh
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////

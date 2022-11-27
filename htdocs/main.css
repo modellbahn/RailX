@@ -16,8 +16,8 @@ main {
   position: relative;
 }
 main .left-main-section {
-  width: 70%;
-  height: 100%;
+  width: 70vw;
+  height: 100vh;
   position: absolute;
   top: 0;
   left: 0;
@@ -68,27 +68,39 @@ main .left-main-section .left-bottom-main-section .auto-manual-mode-selector {
   height: 40vh;
 }
 main .right-main-section {
-  width: 30%;
-  height: 100%;
+  width: 30vw;
+  height: 100vh;
   position: absolute;
   top: 0;
   right: 0;
+}
+main .right-main-section .rms-manual, main .right-main-section .rms-auto {
+  width: 30vw;
+  height: 100vh;
+  display: none;
+}
+main .right-main-section .rms-manual.selected, main .right-main-section .rms-auto.selected {
+  display: block !important;
+}
+main .right-main-section .rms-manual .container-flex-help {
+  width: 30vw;
+  height: 100vh;
   display: flex;
   align-content: center;
   justify-content: center;
   flex-direction: column;
 }
-main .right-main-section .section-lok1 {
+main .right-main-section .rms-manual .container-flex-help .section-lok1 {
   border-bottom: 2px solid #b83434;
   width: 30vw;
   height: 33.3333333333vh;
 }
-main .right-main-section .section-lok2 {
+main .right-main-section .rms-manual .container-flex-help .section-lok2 {
   border-bottom: 2px solid #b83434;
   width: 30vw;
   height: 33.3333333333vh;
 }
-main .right-main-section .section-lok3 {
+main .right-main-section .rms-manual .container-flex-help .section-lok3 {
   width: 30vw;
   height: 33.3333333333vh;
 }
