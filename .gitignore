@@ -8,6 +8,9 @@ lerna-debug.log*
 .pnpm-debug.log*
 .dccache
 
+# Private Data
+htdocs/book cover.png
+
 # Database
 .DeBSON
 
