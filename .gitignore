@@ -9,7 +9,7 @@ lerna-debug.log*
 .dccache
 
 # Private Data
-htdocs/book cover.png
+Fritzing Sketches/
 
 # Database
 .DeBSON
