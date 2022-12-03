@@ -3,6 +3,82 @@ socket.on('console-log', console.log)
 const deb = new DeBSON(socket)
 window.deb = deb
 
+const wizardPages = [
+    async function () {
+        $$('.sw-content').inner(`
+            <img alt="RailX" src="/logo.png">
+            <h1>Willkommen bei RailX</h1>
+            <h2>Nun werden Sie Schritt für Schritt ihr System einrichten und Fahrbereit machen</h2>
+        `)
+    }, async function () {
+        $$('.sw-content').inner('B')
+    }, async function () {
+        $$('.sw-content').inner('C')
+    }, async function () {
+        $$('.sw-content').inner('D')
+    },
+]
+
+const startWizard = async () => {
+    $$('body').inner($$('body').inner() + `<div class="setupwizardcontainer">
+        <div class="sw-content" data-layout="0"></div>
+        <div class="sw-progress">
+            <button id="sw-back">Zurück</button>
+            <span id="sw-progress-page"></span>
+            <button id="sw-next">Weiter</button>
+        </div>
+    </div>`)
+    let currentPageNum = (await deb.cat('setupwizard').obj('currentpage').read()) || 0
+    if (currentPageNum === 0) {
+        currentPageNum = 1
+        await deb.cat('setupwizard').obj('currentpage').write(1)
+    }
+    await deb.cat('setupwizard').obj('currentpage').watch(async (newPageNum) => {
+        currentPageNum = newPageNum
+        $$('.sw-content').inner('')
+        $$('.sw-content').raw(0).setAttribute('data-layout', currentPageNum)
+        $$('#sw-progress-page').text(`${newPageNum}/${wizardPages.length}`)
+        await wizardPages[newPageNum - 1]()
+        if (currentPageNum <= 1) {
+            $$('#sw-back').addClass('deactivated')
+        } else {
+            $$('#sw-back').removeClass('deactivated')
+        }
+        if (currentPageNum < wizardPages.length) {
+            $$('#sw-next').removeClass('deactivated')
+        } else {
+            $$('#sw-next').addClass('deactivated')
+        }
+    })
+
+    if (currentPageNum <= 1) {
+        $$('#sw-back').addClass('deactivated')
+    } else {
+        $$('#sw-back').removeClass('deactivated')
+    }
+    if (currentPageNum < wizardPages.length) {
+        $$('#sw-next').removeClass('deactivated')
+    } else {
+        $$('#sw-next').addClass('deactivated')
+    }
+
+    $$('#sw-back').on('click', async () => {
+        if ($$('#sw-back').hasClass('deactivated')) return
+        await deb.cat('setupwizard').obj('currentpage').write((await deb.cat('setupwizard').obj('currentpage').read()) - 1) 
+    })
+
+    $$('#sw-next').on('click', async () => {
+        if ($$('#sw-next').hasClass('deactivated')) return
+        await deb.cat('setupwizard').obj('currentpage').write((await deb.cat('setupwizard').obj('currentpage').read()) + 1)
+    })
+
+    $$('.sw-content').inner('')
+    $$('.sw-content').raw(0).setAttribute('data-layout', currentPageNum)
+    await wizardPages[currentPageNum - 1]()
+    $$('#sw-progress-page').text(`${currentPageNum}/${wizardPages.length}`)
+
+}
+
 ;((async()=>{
 
 
@@ -117,6 +193,11 @@ window.deb = deb
     $$('#driving-mode-select').on('input', async () => {
         await deb.cat('drivingmodeselect').obj('mode').write($$('#driving-mode-select').checked ? 'manual' : 'script')
     })
+
+    if (((await deb.cat('setupwizard').obj('isDone').read()) || false) === false) {
+        await deb.cat('setupwizard').obj('isDone').write(false)
+        await startWizard()
+    }
 
 
 })());
