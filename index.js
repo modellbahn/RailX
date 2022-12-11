@@ -17,6 +17,12 @@ io.on('connection', (socket) => {
         // Client disconnected
     })
 
+    socket.on('listserialdevices', async (cb) => {
+        const { SerialPort } = require('serialport')
+        const devices = await SerialPort.list()
+        cb(devices)
+    })
+
     // Remote Database
     deb.bind(socket)
 

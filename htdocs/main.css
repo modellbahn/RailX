@@ -515,4 +515,55 @@ main .right-main-section .rms-manual .container-flex-help .section-lok3 {
 .setupwizardcontainer .sw-content[data-layout="1"] img {
   height: 40vh;
   max-width: 90vw;
+}
+.setupwizardcontainer .sw-content[data-layout="2"] {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  text-align: center;
+}
+.setupwizardcontainer .sw-content[data-layout="2"] h1 {
+  color: #b83434;
+}
+.setupwizardcontainer .sw-content[data-layout="2"] h2 {
+  color: #cc5858;
+  font-size: 0.8rem;
+  max-width: 50vw;
+}
+.setupwizardcontainer .sw-content[data-layout="2"] .input-wizard-field {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+}
+.setupwizardcontainer .sw-content[data-layout="2"] .input-wizard-field input {
+  margin-top: 0.2rem;
+  outline: none;
+  border: 2px solid #cc5858;
+  font-size: 1rem;
+  text-align: center;
+  padding: 0.3rem;
+  border-radius: 0.5rem;
+  color: #484848;
+}
+.setupwizardcontainer .sw-content[data-layout="2"] .input-wizard-field input:focus, .setupwizardcontainer .sw-content[data-layout="2"] .input-wizard-field input:hover {
+  border: 2px solid #b83434;
+  color: #000;
+}
+.setupwizardcontainer .sw-content[data-layout="3"] {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  text-align: center;
+}
+.setupwizardcontainer .sw-content[data-layout="3"] h1 {
+  color: #b83434;
+}
+.setupwizardcontainer .sw-content[data-layout="3"] h2 {
+  color: #cc5858;
+  font-size: 0.8rem;
+  max-width: 50vw;
 }/*# sourceMappingURL=main.css.map */

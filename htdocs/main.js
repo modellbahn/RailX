@@ -11,9 +11,51 @@ const wizardPages = [
             <h2>Nun werden Sie Schritt für Schritt ihr System einrichten und Fahrbereit machen</h2>
         `)
     }, async function () {
-        $$('.sw-content').inner('B')
+        $$('.sw-content').inner(`
+            <div class="wizputhead">
+                <h1>Systemzeit einstellen</h1>
+                <h2>Ihre Anlage besitzt ein eigenes Zeitsystem, um Beleuchtung und Fahrpläne zu steuern</h2>
+            </div>
+            <div class="input-wizard-field">
+                <span>Wie viele Sekunden soll eine Stunde auf der Anlage dauern?</span>
+                <input id="wizput-seqh" type="number" min="1" max="3600" value="30">
+            </div>
+        `)
+        $$('#wizput-seqh').on('input', async () => {
+            let val = $$('#wizput-seqh').value
+            val = parseInt(val)
+            if (isNaN(val)) return
+            if (val < 1) val = 1
+            if (val > 3600) val = 3600
+
+            await deb.cat('timecycler').obj('hour-equals-secs').write(val)
+        })
+        $$('#wizput-seqh').value = ((await deb.cat('timecycler').obj('hour-equals-secs').read()) || 30)
     }, async function () {
-        $$('.sw-content').inner('C')
+        $$('.sw-content').inner(`
+            <div class="wizputhead">
+                <h1>Angeschlossene Slaves</h1>
+                <h2>Slaves verwalten alle ihre angeschlossenen Geräte. Bitte wählen sie alle unten geliste Geräte aus, die Slaves sind</h2>
+            </div>
+            <div class="choose-slaves">
+                <ul id="slavelist"></ul>
+            </div>
+        `)
+
+        const updateDevices = () => {
+            socket.emit('listserialdevices', async (devices) => {
+                $$('#slavelist').inner('')
+                for (const device of devices) {
+                    $$('#slavelist').inner($$('#slavelist').inner() + `
+                        <li><span class="devicelist-port">${device.path}</span>: <span class="devicelist-name">${device.friendlyName}</span></li>
+                    `)
+                }
+
+                if ((await deb.cat('setupwizard').obj('currentpage').read()) !== 3) clearInterval(intervalid)
+            })
+        }
+        const intervalid = setInterval(updateDevices, 500)
+        updateDevices()
     }, async function () {
         $$('.sw-content').inner('D')
     },
