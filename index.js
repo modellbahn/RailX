@@ -8,6 +8,7 @@ const { Server } = require("socket.io")
 const io = new Server(server)
 const deb = require('debson')
 deb.folder(path.join(__dirname, '.DeBSON'))
+const modellbahn = require('modellbahn')
 
 app.use(express.static(path.join(__dirname, 'htdocs')))
 
@@ -15,6 +16,10 @@ io.on('connection', (socket) => {
     // Client connected
     socket.on('disconnect', () => {
         // Client disconnected
+    })
+
+    socket.on('soundcheck', () => {
+        modellbahn.soundcheck()
     })
 
     socket.on('listserialdevices', async (cb) => {

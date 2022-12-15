@@ -92,6 +92,44 @@ const wizardPages = [
         await deb.cat('slaves').obj('slavelist').watch(onSlavelistUpdate)
         await onSlavelistUpdate((await deb.cat('slaves').obj('slavelist').read()) || [])
     }, async function () {
+        $$('.sw-content').inner(`
+            <div class="wizputhead">
+                <h1>Lautsprecher aktivieren</h1>
+                <h2>RailX verfügt über ein Soundsystem. Dafür muss jedoch ein Lautsprecher verbunden und in den Raspberry Pi Einstellungen aktiviert sein. Falls Sie das Soundsystem nicht benutzen wollen, können Sie diesen Schritt überspringen</h2>
+            </div>
+            <div class="soundcheck">
+                <h1>Hören Sie einen Ton?</h1>
+                <br>
+                <button id="start-soundcheck">Ton abspielen</button>
+                <br>
+                <br>
+                <h2>Falls Sie keinen Ton hören überprüfen Sie ob der Lautsprecher richtig angeschlossen und in den Einstellungen aktiviert ist!</h2>
+            </div>
+        `)
+        $$('#start-soundcheck').on('click', () => {
+            socket.emit('soundcheck')
+        })
+    }, async function () {
+        $$('.sw-content').inner('D')
+    }, async function () {
+        $$('.sw-content').inner('D')
+    }, async function () {
+        $$('.sw-content').inner('D')
+    }, async function () {
+        $$('.sw-content').inner('D')
+    }, async function () {
+        $$('.sw-content').inner('D')
+    }, async function () {
+        $$('.sw-content').inner('D')
+    }, async function () {
+        $$('.sw-content').inner('D')
+    }, async function () {
+        $$('.sw-content').inner('D')
+    }, async function () {
+        $$('.sw-content').inner('D')
+    }, async function () {
+        $$('.sw-content').inner('D')
+    }, async function () {
         $$('.sw-content').inner('D')
     },
 ]
