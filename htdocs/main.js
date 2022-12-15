@@ -39,6 +39,8 @@ const wizardPages = [
             </div>
             <div class="choose-slaves">
                 <ul id="slavelist"></ul>
+                <hr>
+                <ul id="chosen-slaves"></ul>
             </div>
         `)
 
@@ -47,15 +49,48 @@ const wizardPages = [
                 $$('#slavelist').inner('')
                 for (const device of devices) {
                     $$('#slavelist').inner($$('#slavelist').inner() + `
-                        <li><span class="devicelist-port">${device.path}</span>: <span class="devicelist-name">${device.friendlyName}</span></li>
+                        <li><span class="devicelist-port">${device.path}</span>: <span class="devicelist-name">${device.friendlyName}</span><i class="add-device-slave fa-solid fa-circle-plus"></i></li>
                     `)
                 }
+
+                $$('#slavelist li i').on('click', async (event) => {
+                    const port = event.path[1].querySelector('.devicelist-port').innerText.trim()
+                    const name = event.path[1].querySelector('.devicelist-name').innerText.trim()
+                    const slaveoptions = { port, name }
+                    let slavelist = (await deb.cat('slaves').obj('slavelist').read()) || []
+                    slavelist.push(slaveoptions)
+                    slavelist = slavelist.map(e => JSON.stringify(e))
+                    slavelist = [...new Set(slavelist)]
+                    slavelist = slavelist.map(e => JSON.parse(e))
+                    await deb.cat('slaves').obj('slavelist').write(slavelist)
+                })
 
                 if ((await deb.cat('setupwizard').obj('currentpage').read()) !== 3) clearInterval(intervalid)
             })
         }
-        const intervalid = setInterval(updateDevices, 500)
+        const intervalid = setInterval(updateDevices, 2000)
         updateDevices()
+        const onSlavelistUpdate = newList => {
+            $$('#chosen-slaves').inner('')
+            for (const device of newList) {
+                $$('#chosen-slaves').inner($$('#chosen-slaves').inner() + `
+                    <li><span class="devicelist-port">${device.port}</span>: <span class="devicelist-name">${device.name}</span><i class="del-device-slave fa-solid fa-circle-xmark"></i></li>
+                `)
+            }
+
+            $$('#chosen-slaves li i').on('click', async (event) => {
+                const port = event.path[1].querySelector('.devicelist-port').innerText.trim()
+                const name = event.path[1].querySelector('.devicelist-name').innerText.trim()
+                const slaveoptions = { port, name }
+                let slavelist = (await deb.cat('slaves').obj('slavelist').read()) || []
+                slavelist = slavelist.map(e => JSON.stringify(e))
+                slavelist = slavelist.filter(e => e !== JSON.stringify(slaveoptions))
+                slavelist = slavelist.map(e => JSON.parse(e))
+                await deb.cat('slaves').obj('slavelist').write(slavelist)
+            })
+        }
+        await deb.cat('slaves').obj('slavelist').watch(onSlavelistUpdate)
+        await onSlavelistUpdate((await deb.cat('slaves').obj('slavelist').read()) || [])
     }, async function () {
         $$('.sw-content').inner('D')
     },

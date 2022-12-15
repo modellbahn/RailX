@@ -566,4 +566,46 @@ main .right-main-section .rms-manual .container-flex-help .section-lok3 {
   color: #cc5858;
   font-size: 0.8rem;
   max-width: 50vw;
+}
+.setupwizardcontainer .sw-content[data-layout="3"] #slavelist li {
+  max-width: 70vw;
+  list-style-type: none;
+}
+.setupwizardcontainer .sw-content[data-layout="3"] #slavelist li .devicelist-port {
+  color: #b83434;
+}
+.setupwizardcontainer .sw-content[data-layout="3"] #slavelist li .add-device-slave {
+  color: #3ca137;
+  margin-left: 3vw;
+  float: right;
+}
+.setupwizardcontainer .sw-content[data-layout="3"] #slavelist li .add-device-slave:hover {
+  cursor: pointer;
+  color: #2c7128;
+}
+.setupwizardcontainer .sw-content[data-layout="3"] hr {
+  background: #b83434;
+  width: auto;
+  max-width: 70vw;
+  border: none;
+  outline: none;
+  height: 0.08rem;
+  margin-top: 0.1rem;
+  margin-bottom: 0.1rem;
+}
+.setupwizardcontainer .sw-content[data-layout="3"] #chosen-slaves li {
+  max-width: 70vw;
+  list-style-type: none;
+}
+.setupwizardcontainer .sw-content[data-layout="3"] #chosen-slaves li .devicelist-port {
+  color: #b83434;
+}
+.setupwizardcontainer .sw-content[data-layout="3"] #chosen-slaves li .del-device-slave {
+  color: #cc5858;
+  margin-left: 3vw;
+  float: right;
+}
+.setupwizardcontainer .sw-content[data-layout="3"] #chosen-slaves li .del-device-slave:hover {
+  cursor: pointer;
+  color: #b83434;
 }/*# sourceMappingURL=main.css.map */
