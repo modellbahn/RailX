@@ -8,7 +8,7 @@ const wizardPages = [
         $$('.sw-content').inner(`
             <img alt="RailX" src="/logo.png">
             <h1>Willkommen bei RailX</h1>
-            <h2>Nun werden Sie Schritt für Schritt ihr System einrichten und Fahrbereit machen</h2>
+            <h2>Nun werden Sie Schritt für Schritt ihr System einrichten und fahrbereit machen</h2>
         `)
     }, async function () {
         $$('.sw-content').inner(`
