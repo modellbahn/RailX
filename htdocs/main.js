@@ -35,7 +35,7 @@ const wizardPages = [
         $$('.sw-content').inner(`
             <div class="wizputhead">
                 <h1>Angeschlossene Slaves</h1>
-                <h2>Slaves verwalten alle ihre angeschlossenen Geräte. Bitte wählen sie alle unten geliste Geräte aus, die Slaves sind</h2>
+                <h2>Slaves verwalten alle ihre angeschlossenen Geräte. Bitte wählen sie alle unten gelisten Geräte aus, die Slaves sind</h2>
             </div>
             <div class="choose-slaves">
                 <ul id="slavelist"></ul>
@@ -110,7 +110,76 @@ const wizardPages = [
             socket.emit('soundcheck')
         })
     }, async function () {
-        $$('.sw-content').inner('D')
+        $$('.sw-content').inner(`
+            <div class="wizputhead">
+                <h1>Rangierfahrtenregler hinzufügen</h1>
+                <h2>Der Rangierfahrtenregler steuert die Loks im Schattenbahnhof</h2>
+            </div>
+            <div class="input-wizard-field">
+                <span>Mit welchem Slave ist der Rangierfahrtenregler verbunden?</span>
+                <div id="slave-select"></div>
+            </div>
+            <div class="input-wizard-field">
+                <span>Welcher PWM-Pin ist mit dem Enable Pin verbunden?</span>
+                <input id="wizput-rfr-pin-enable" type="number" min="1" max="500" value="1">
+            </div>
+            <div class="input-wizard-field">
+                <span>Welcher Pin ist mit dem Input1 Pin verbunden?</span>
+                <input id="wizput-rfr-pin-input1" type="number" min="1" max="500" value="2">
+            </div>
+            <div class="input-wizard-field">
+                <span>Welcher Pin ist mit dem Input2 Pin verbunden?</span>
+                <input id="wizput-rfr-pin-input2" type="number" min="1" max="500" value="3">
+            </div>
+        `)
+
+        $$('#slave-select').on('input', async () => {
+            const port = $$('#slave-select #wizput-rfr-slave').value
+            await deb.cat('RangierFahrtenRegler').obj('slave').write(port)
+        })
+        setTimeout(async () => {
+            let rfrslaveonboot = await deb.cat('RangierFahrtenRegler').obj('slave').read()
+            console.log(rfrslaveonboot)
+            if (rfrslaveonboot) {
+                $$('#slave-select #wizput-rfr-slave').value = rfrslaveonboot
+            }
+        }, 200)
+
+        $$('#wizput-rfr-pin-enable').on('input', async () => {
+            await deb.cat('RangierFahrtenRegler').obj('pin-enable').write($$('#wizput-rfr-pin-enable').value)
+        })
+        let rfrPinEnableOnBoot = await deb.cat('RangierFahrtenRegler').obj('pin-enable').read()
+        if (typeof rfrPinEnableOnBoot === 'string') {
+            $$('#wizput-rfr-pin-enable').value = rfrPinEnableOnBoot
+        }
+
+        $$('#wizput-rfr-pin-input1').on('input', async () => {
+            await deb.cat('RangierFahrtenRegler').obj('pin-input1').write($$('#wizput-rfr-pin-input1').value)
+        })
+        let rfrPinInput1Boot = await deb.cat('RangierFahrtenRegler').obj('pin-input1').read()
+        if (typeof rfrPinInput1OnBoot === 'string') {
+            $$('#wizput-rfr-pin-input1').value = rfrPinInput1OnBoot
+        }
+
+        $$('#wizput-rfr-pin-input2').on('input', async () => {
+            await deb.cat('RangierFahrtenRegler').obj('pin-input2').write($$('#wizput-rfr-pin-input2').value)
+        })
+        let rfrPinInput2Boot = await deb.cat('RangierFahrtenRegler').obj('pin-input2').read()
+        if (typeof rfrPinInput2OnBoot === 'string') {
+            $$('#wizput-rfr-pin-input2').value = rfrPinInput2OnBoot
+        }
+        
+        const onSlaveChange = async (slavelist) => {
+            if (typeof slavelist !== 'object') slavelist = []
+            $$('#slave-select').inner(`<select id="wizput-rfr-slave"></select>`)
+            for (const slave of slavelist) {
+                $$('#slave-select #wizput-rfr-slave').inner($$('#slave-select #wizput-rfr-slave').inner() + `
+                    <option data-slave-port="${slave.port}" value="${slave.port}">${slave.port}: ${slave.name}</option>
+                `)
+            }
+        }
+        onSlaveChange(await deb.cat('slaves').obj('slavelist').read())
+        await deb.cat('slaves').obj('slavelist').watch(onSlaveChange)
     }, async function () {
         $$('.sw-content').inner('D')
     }, async function () {
