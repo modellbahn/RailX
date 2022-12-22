@@ -2,6 +2,9 @@ const socket = io()
 socket.on('console-log', console.log)
 const deb = new DeBSON(socket)
 window.deb = deb
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+const random = (min, max) => Math.floor(Math.random() * (max - min)) + min
+const uuid = () => ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16))
 
 const wizardPages = [
     async function () {
@@ -139,7 +142,6 @@ const wizardPages = [
         })
         setTimeout(async () => {
             let rfrslaveonboot = await deb.cat('RangierFahrtenRegler').obj('slave').read()
-            console.log(rfrslaveonboot)
             if (rfrslaveonboot) {
                 $$('#slave-select #wizput-rfr-slave').value = rfrslaveonboot
             }
@@ -156,7 +158,7 @@ const wizardPages = [
         $$('#wizput-rfr-pin-input1').on('input', async () => {
             await deb.cat('RangierFahrtenRegler').obj('pin-input1').write($$('#wizput-rfr-pin-input1').value)
         })
-        let rfrPinInput1Boot = await deb.cat('RangierFahrtenRegler').obj('pin-input1').read()
+        let rfrPinInput1OnBoot = await deb.cat('RangierFahrtenRegler').obj('pin-input1').read()
         if (typeof rfrPinInput1OnBoot === 'string') {
             $$('#wizput-rfr-pin-input1').value = rfrPinInput1OnBoot
         }
@@ -164,7 +166,7 @@ const wizardPages = [
         $$('#wizput-rfr-pin-input2').on('input', async () => {
             await deb.cat('RangierFahrtenRegler').obj('pin-input2').write($$('#wizput-rfr-pin-input2').value)
         })
-        let rfrPinInput2Boot = await deb.cat('RangierFahrtenRegler').obj('pin-input2').read()
+        let rfrPinInput2OnBoot = await deb.cat('RangierFahrtenRegler').obj('pin-input2').read()
         if (typeof rfrPinInput2OnBoot === 'string') {
             $$('#wizput-rfr-pin-input2').value = rfrPinInput2OnBoot
         }
@@ -181,7 +183,107 @@ const wizardPages = [
         onSlaveChange(await deb.cat('slaves').obj('slavelist').read())
         await deb.cat('slaves').obj('slavelist').watch(onSlaveChange)
     }, async function () {
-        $$('.sw-content').inner('D')
+        $$('.sw-content').inner(`
+            <div class="wizputhead">
+                <h1>Fahrtenregler hinzufügen</h1>
+                <h2>Fahrtenregler steuern die Loks an. Füge mindestens 3 hinzu!</h2>
+            </div>
+            <div class="add-fr">
+                <button id="wiz-add-fr-btn">Neuer Fahrtenregler</button>
+            </div>
+            <div class="fr-list"></div>
+        `)
+
+        const onSlaveChange = async (slavelist) => {
+            if (typeof slavelist !== 'object') slavelist = []
+            $$('.wiz-fr-slave-select').inner(`<select class="wizput-fr-slave"></select>`)
+            for (const slave of slavelist) {
+                $$('.wiz-fr-slave-select .wizput-fr-slave').inner($$('.wiz-fr-slave-select .wizput-fr-slave').get(0).inner() + `
+                    <option data-slave-port="${slave.port}" value="${slave.port}">${slave.port}: ${slave.name}</option>
+                `)
+            }
+            $$('.wizput-fr-slave').each(async el =>  {
+                const id = el.raw(0).parentElement.parentElement.parentElement.dataset.frId
+                const frlist = await deb.cat('FahrtenRegler').obj('list').read()
+                const slave = frlist.filter(e => e.id == id)[0].slave
+                if (slave) {
+                    el.value = slave
+                } else {
+                    el.value = slavelist[0].port
+                    const newFrList = frlist.map(e => {
+                        if (e.id == id) {
+                            e.slave = slavelist[0].port
+                        }
+                        return e
+                    })
+                    await deb.cat('FahrtenRegler').obj('list').write(newFrList)
+                }
+            })
+            $$('.wizput-fr-slave').on('input', async ev => {
+                let list = await deb.cat('FahrtenRegler').obj('list').read()
+                list = list.map(el => {
+                    if (el.id == ev.target.parentElement.parentElement.parentElement.dataset.frId) {
+                        el.slave = ev.target.value
+                    }
+
+                    return el
+                })
+                await deb.cat('FahrtenRegler').obj('list').write(list)
+            })
+        }
+
+        const updateFr = async (frs) => {
+            if (!Array.isArray(frs)) {
+                frs = []
+                await deb.cat('FahrtenRegler').obj('list').write(frs)
+            }
+            $$('.fr-list').inner('')
+            for (const fr of frs) {
+                $$('.fr-list').innerHTML += `
+                    <div class="fr-list-fr" data-fr-id="${fr.id}">
+                        <button onclick="(async()=>{await deb.cat('FahrtenRegler').obj('list').write((await deb.cat('FahrtenRegler').obj('list').read()).filter(e => e.id !== '${fr.id}'))})()">Löschen</button>
+                        <div class="input-wizard-field">
+                            <span>Slave: </span>
+                            <div class="wiz-fr-slave-select"></div>
+                        </div>
+                        <div class="input-wizard-field">
+                            <span>Enable Pin: </span>
+                            <input id="wizput-fr-pin-enable" oninput="(async()=>{await deb.cat('FahrtenRegler').obj('list').write((await deb.cat('FahrtenRegler').obj('list').read()).map(e=>{if(e.id=='${fr.id}'){e.enablePin=(event.srcElement.value)};return e}))})()" type="number" min="1" max="500" value="${fr.enablePin}">
+                        </div>
+                        <div class="input-wizard-field">
+                            <span>Input1 Pin: </span>
+                            <input id="wizput-fr-pin-input1" oninput="(async()=>{await deb.cat('FahrtenRegler').obj('list').write((await deb.cat('FahrtenRegler').obj('list').read()).map(e=>{if(e.id=='${fr.id}'){e.input1Pin=(event.srcElement.value)};return e}))})()" type="number" min="1" max="500" value="${fr.input1Pin}">
+                        </div>
+                        <div class="input-wizard-field">
+                            <span>Input2 Pin: </span>
+                            <input id="wizput-fr-pin-input2" oninput="(async()=>{await deb.cat('FahrtenRegler').obj('list').write((await deb.cat('FahrtenRegler').obj('list').read()).map(e=>{if(e.id=='${fr.id}'){e.input2Pin=(event.srcElement.value)};return e}))})()" type="number" min="1" max="500" value="${fr.input2Pin}">
+                        </div>
+                    </div>
+                `
+            }
+
+            onSlaveChange(await deb.cat('slaves').obj('slavelist').read())
+        }
+
+        await deb.cat('FahrtenRegler').obj('list').watch(updateFr)
+        updateFr(await deb.cat('FahrtenRegler').obj('list').read())
+
+        onSlaveChange(await deb.cat('slaves').obj('slavelist').read())
+        await deb.cat('slaves').obj('slavelist').watch(onSlaveChange)
+        
+
+        $$('#wiz-add-fr-btn').on('click', async () => {
+            let list = await deb.cat('FahrtenRegler').obj('list').read()
+            if (!Array.isArray(list)) list = []
+            list.push({
+                slave: null,
+                enablePin: `${random(1, 52) }`,
+                input1Pin: `${random(1, 52) }`,
+                input2Pin: `${random(1, 52) }`,
+                id: uuid()
+            })
+            await deb.cat('FahrtenRegler').obj('list').write(list)
+        })
     }, async function () {
         $$('.sw-content').inner('D')
     }, async function () {
