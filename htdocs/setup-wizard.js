@@ -178,7 +178,7 @@ const wizardPages = [
         $$('.sw-content').inner(`
             <div class="wizputhead">
                 <h1>Fahrtenregler hinzufügen</h1>
-                <h2>Fahrtenregler steuern die Loks an. Füge mindestens 3 hinzu!</h2>
+                <h2>Fahrtenregler steuern die Loks an. Fügen Sie mindestens 3 hinzu!</h2>
             </div>
             <div class="add-fr">
                 <button id="wiz-add-fr-btn">Neuer Fahrtenregler</button>
@@ -277,9 +277,20 @@ const wizardPages = [
             await deb.cat('FahrtenRegler').obj('list').write(list)
         })
     }, async function () {
-        $$('.sw-content').inner('D')
+        $$('.sw-content').inner(`
+            <div class="wizputhead">
+                <h1>Gleisbild erstellen</h1>
+                <h2>Im näschsten Schritt werden sie ihren Gleisplan übertragen, ein Gleisbild erstellen und schließlich alle Gleisabschnitte verkabeln. Da dies am Anfang etwas schwierig wird, empfehlen wir Ihnen erst folgendes Tutorial anzugucken:</h2>
+            </div>
+            <div class="yt-vid">
+                <iframe src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </divc>
+        `)
     }, async function () {
-        $$('.sw-content').inner('D')
+        $$('.sw-content').inner('<button id="open-gb-editor">Gleisbild-Editor öffnen</button>')
+        $$('#open-gb-editor').on('click', () => {
+            
+        })
     }, async function () {
         $$('.sw-content').inner('D')
     }, async function () {
