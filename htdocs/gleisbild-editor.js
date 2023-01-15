@@ -33,10 +33,30 @@ class Gleisbild {
             this.addStyles()
         }
 
+        let p = this
+
+        if (this.showControls) {
+            // Add button to toggle between modes
+            document.querySelector(`.gbc-${this.id}`).innerHTML += `<button class="gbc-togglemodebtn"><i class="fa-solid fa-book-open"></i></button>`
+            document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`).addEventListener('click', () => {
+                if (this.showControls) {
+                    this.showControls = false
+                    this.mode = 'view'
+                    document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`).innerHTML = '<i class="fa-solid fa-pen"></i>'
+                    p.removeEmptyFields()
+                } else {
+                    this.showControls = true
+                    this.mode = 'edit'
+                    document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`).innerHTML = '<i class="fa-solid fa-book-open"></i>'
+                    p.renderEmptyFields()
+                }
+                document.querySelector(`.gbc-${this.id}`).classList.toggle('edit-mode')
+            })
+        }
+
         this.updateSizes()
         this.updateMovement()
         this.renderEmptyFields()
-        let p = this
 
         document.querySelector(`.gbc-${this.id}`).addEventListener('wheel', function (e) {
             e.preventDefault()
@@ -95,6 +115,12 @@ class Gleisbild {
         }
     }
 
+    removeEmptyFields () {
+        for (const field of document.querySelectorAll(`.gbc-${this.id} .gbc-empty-field`)) {
+            field.innerHTML = ''
+        }
+    }
+
     export () {
         this.save.settings.zoom = this.zoom
         this.save.settings.x = this.x
@@ -127,15 +153,31 @@ class Gleisbild {
             <style>
                 .gbc {
                     background: #fff;
+                    position: relative;
                     overflow: hidden;
+                }
+                .gbc-togglemodebtn {
+                    position: absolute;
+                    bottom: 2%;
+                    right: 2%;
+                    outline: none;
+                    border: 2px solid #b83434;
+                    background: #fff;
+                    color: #cc5858;
+                    padding: 1%;
+                    border-radius: 100vw;
+                }
+                .gbc-togglemodebtn:hover {
+                    background: #b83434;
+                    color: #fff;
+                    cursor: pointer;
                 }
                 .gbc-fieldmap {
                     display: flex;
                     flex-direction: row;
                     justify-content: center;
                     align-items: center;
-                    flex-wrap:wrap;
-                    
+                    flex-wrap: wrap;
                 }
                 .gbc-field {
                     
