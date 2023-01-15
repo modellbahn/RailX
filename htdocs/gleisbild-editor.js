@@ -1,18 +1,20 @@
 class Gleisbild {
     constructor (element, mode, save = '{"settings":{"width":30,"height":50,"zoom":0.2},"elements":[]}') {
         if (!element) throw new Error('Please provide an element!')
-        if (typeof element === 'string' || element instanceof Element) element = $$(element)
+        if (typeof element === 'string') element = document.querySelector(element)
         this.element = element
         this.mode = mode
         this.showControls = mode === 'edit'
         this.save = JSON.parse(save)
         this.zoom = this.save.settings.zoom || 0.2
+        this.id = ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16))
 
-        element.addClass('gleisbild-container')
-        element.addClass('gbc')
-        if (this.showControls) element.addClass('edit-mode')
-        element.inner('<div class="gbc-fieldmap"></div>')
-        const fm = element.raw(0).querySelector('.gbc-fieldmap')
+        element.classList.add('gleisbild-container')
+        element.classList.add('gbc')
+        element.classList.add(`gbc-${this.id}`)
+        if (this.showControls) element.classList.add('edit-mode')
+        element.innerHTML = '<div class="gbc-fieldmap"></div>'
+        const fm = element.querySelector('.gbc-fieldmap')
         this.fm = fm
 
         let fieldstr = ''
@@ -30,6 +32,19 @@ class Gleisbild {
         }
 
         this.updateSizes()
+        let p = this
+
+        document.querySelector(`.gbc-${this.id}`).addEventListener('wheel', function (e) {
+            e.preventDefault()
+            if (e.deltaY < 0) {
+                p.zoom += 0.01
+                p.updateSizes()
+            }
+            if (e.deltaY > 0) {
+                p.zoom -= 0.01
+                p.updateSizes()
+            }
+        })
     }
 
     export () {
@@ -38,13 +53,20 @@ class Gleisbild {
     }
 
     updateSizes () {
-        this.fm.style.width = 640 * this.zoom * this.save.settings.width
-        this.fm.style.height = 400 * this.zoom * this.save.settings.height
+        const elem = document.querySelector(`.gbc-${this.id}`)
+        const fm = elem.querySelector('.gbc-fieldmap')
+
+        fm.style.width = `${640 * this.zoom * this.save.settings.width}px`
+        fm.style.height = `${400 * this.zoom * this.save.settings.height}px`
+        for (const field of elem.querySelectorAll('.gbc-field')) {
+            field.style.width = `${640 * this.zoom}px`
+            field.style.height = `${400 * this.zoom}px`
+        }
     }
 
     addStyles () {
         window.gbESa = true
-        $$('body').inner($$('body').inner() + `
+        document.querySelector('body').innerHTML += `
             <style>
                 .gbc {
                     background: #fff;
@@ -64,7 +86,7 @@ class Gleisbild {
                     border: 1px solid gray;
                 }
             </style>
-        `)
+        `
     }
 }
 
