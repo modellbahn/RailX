@@ -60,6 +60,7 @@ class Gleisbild {
         this.renderEmptyFields()
 
         document.querySelector(`.gbc-${this.id}`).addEventListener('wheel', function (e) {
+            if (window.gbeionfdo) return
             e.preventDefault()
             if (e.deltaY < 0) {
                 p.zoom += 0.01
@@ -93,7 +94,7 @@ class Gleisbild {
             const x = e.clientX
             const y = e.clientY
 
-            if (isMouseDown && targetsElem) {
+            if (isMouseDown && targetsElem && !window.gbeionfdo) {
                 p.x -= lastMouseX - x
                 p.y -= lastMouseY - y
                 p.updateMovement()
@@ -118,12 +119,77 @@ class Gleisbild {
         this.eventHandlers[event].push(cb)
     }
 
+    async openNewFieldDialogue () {
+        window.gbeionfdo = true
+        document.querySelector(`.gbc-${this.id}`).innerHTML += `
+            <div class="gbc-onfd">
+                <h1>Was möchten Sie hinzufügen?</h1>
+                <div class="gbc-onfd-cc">
+                    <div class="gbc-onfd-cc-e">
+                        <h2>Gleis-Abteil</h2>
+                        <img src="/gleisbild/abteil.svg">
+                    </div>
+                    <div class="gbc-onfd-cc-e">
+                        <h2>Kurve nach Unten</h2>
+                        <img src="/gleisbild/curve-down.svg">
+                    </div>
+                    <div class="gbc-onfd-cc-e">
+                        <h2>Kurve nach Oben</h2>
+                        <img src="/gleisbild/curve-up.svg">
+                    </div>
+                    <div class="gbc-onfd-cc-e">
+                        <h2>Zug Detector</h2>
+                        <img src="/gleisbild/detector.svg">
+                    </div>
+                    <div class="gbc-onfd-cc-e">
+                        <h2>Entkupplungsgleis</h2>
+                        <img src="/gleisbild/entkupplungsgleis.svg">
+                    </div>
+                    <div class="gbc-onfd-cc-e">
+                        <h2>Weiche Links</h2>
+                        <img src="/gleisbild/weiche-links.svg">
+                    </div>
+                    <div class="gbc-onfd-cc-e">
+                        <h2>Weiche Rechts</h2>
+                        <img src="/gleisbild/weiche-rechts.svg">
+                    </div>
+                    <div class="gbc-onfd-cc-e">
+                        <h2>Signal</h2>
+                        <img src="/gleisbild/signal.svg">
+                    </div>
+                    <div class="gbc-onfd-cc-e">
+                        <h2>Bahnhof / Haltepunkt</h2>
+                        <img src="/gleisbild/station.svg">
+                    </div>
+                    <div class="gbc-onfd-cc-e">
+                        <h2>Prellbock</h2>
+                        <img src="/gleisbild/prellbock.svg">
+                    </div>
+                    <div class="gbc-onfd-cc-e">
+                        <h2>Portal-Verbinder</h2>
+                        <img src="/gleisbild/portal.svg">
+                    </div>
+                    <div class="gbc-onfd-cc-e">
+                        <h2>Gleis-Abteil</h2>
+                        <img src="/gleisbild/abteil.svg">
+                    </div>
+                </div>
+            </div>
+        `
+    }
+
     renderEmptyFields () {
+        let p = this
         if (!this.showControls) return
         for (const field of document.querySelector(`.gbc-${this.id}`).querySelectorAll('.gbc-field')) {
             if (!field.innerHTML.trim()) {
                 field.classList.add('gbc-empty-field')
                 field.innerHTML = `<i class="fa-solid fa-circle-plus"></i>`
+                field.querySelector('i').addEventListener('click', async () => {
+                    if (window.gbeionfdo) return
+                    const type = await p.openNewFieldDialogue()
+                    console.log(type)
+                })
             }
         }
     }
@@ -190,6 +256,57 @@ class Gleisbild {
                     background: #b83434;
                     color: #fff;
                     cursor: pointer;
+                }
+                .gbc-onfd {
+                    position: absolute;
+                    width: 70%;
+                    height: 80%;
+                    top: 10%;
+                    left: 15%;
+                    border: 2px solid #b83434;
+                    background: #fff;
+                    border-radius: 10px;
+                    padding: 1%;
+                    color: #000;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;      
+                    overflow-y: auto; 
+                    text-align: center;
+                    color: #b83434;  
+                    padding-top: 30%;         
+                }
+                .gbc-onfd-cc {
+                    display: flex;
+                    justify-content: space-evenly;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    flex-direction: row;
+                    width: 90%;  
+                    margin-top: 3%;       
+                }
+                .gbc-onfd-cc-e {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-evenly;
+                    align-items: center;
+                    text-align: center;
+                    border: 1px solid #b83434;
+                    border-radius: 10px;
+                    padding: 1%;
+                    cursor: pointer;
+                    color: #000;
+                    width: 30%;
+                    font-size: 75%;
+                    margin-bottom: 2%;
+                }
+                .gbc-onfd-cc-e img {
+                    aspect-ratio: 640 / 400;
+                    height: auto;
+                    max-height: 90%;
+                    width: auto;
+                    max-width: 95%;
                 }
                 .gbc-fieldmap {
                     display: flex;
