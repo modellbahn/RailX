@@ -35,6 +35,7 @@ class Gleisbild {
 
         this.updateSizes()
         this.updateMovement()
+        this.renderEmptyFields()
         let p = this
 
         document.querySelector(`.gbc-${this.id}`).addEventListener('wheel', function (e) {
@@ -84,6 +85,16 @@ class Gleisbild {
         
     }
 
+    renderEmptyFields () {
+        if (!this.showControls) return
+        for (const field of document.querySelector(`.gbc-${this.id}`).querySelectorAll('.gbc-field')) {
+            if (!field.innerHTML.trim()) {
+                field.classList.add('gbc-empty-field')
+                field.innerHTML = `<i class="fa-solid fa-circle-plus"></i>`
+            }
+        }
+    }
+
     export () {
         this.save.settings.zoom = this.zoom
         this.save.settings.x = this.x
@@ -100,6 +111,7 @@ class Gleisbild {
         for (const field of elem.querySelectorAll('.gbc-field')) {
             field.style.width = `${640 * this.zoom}px`
             field.style.height = `${400 * this.zoom}px`
+            field.style.fontSize = `${120 * this.zoom}px`
         }
     }
 
@@ -127,6 +139,21 @@ class Gleisbild {
                 }
                 .gbc-field {
                     
+                }
+                .gbc-empty-field {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    text-align: center;
+                }
+                .gbc-empty-field i {
+                    font-size: 2em;
+                    color: #cc5858;
+                }
+                .gbc-empty-field i:hover {
+                    font-size: 2em;
+                    color: #b83434;
+                    cursor: pointer;
                 }
                 .gbc.edit-mode .gbc-field {
                     border: 1px solid gray;
