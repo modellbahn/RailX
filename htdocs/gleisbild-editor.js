@@ -1,5 +1,5 @@
 class Gleisbild {
-    constructor (element, mode, save = '{"settings":{"width":30,"height":50,"zoom":0.2},"elements":[]}') {
+    constructor (element, mode, save = '{"settings":{"width":30,"height":50,"zoom":0.2,"x":0,"y":0},"elements":[]}') {
         if (!element) throw new Error('Please provide an element!')
         if (typeof element === 'string') element = document.querySelector(element)
         this.element = element
@@ -7,6 +7,8 @@ class Gleisbild {
         this.showControls = mode === 'edit'
         this.save = JSON.parse(save)
         this.zoom = this.save.settings.zoom || 0.2
+        this.x = this.save.settings.x || 0
+        this.y = this.save.settings.y || 0
         this.id = ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16))
 
         element.classList.add('gleisbild-container')
@@ -32,6 +34,7 @@ class Gleisbild {
         }
 
         this.updateSizes()
+        this.updateMovement()
         let p = this
 
         document.querySelector(`.gbc-${this.id}`).addEventListener('wheel', function (e) {
@@ -45,10 +48,50 @@ class Gleisbild {
                 p.updateSizes()
             }
         })
+
+        let isMouseDown = false
+        let targetsElem = false
+        let lastMouseX = 0
+        let lastMouseY = 0
+        document.addEventListener('mousedown', () => {
+            isMouseDown = true
+        })
+        document.addEventListener('mouseup', () => {
+            isMouseDown = false
+        })
+        document.querySelector(`.gbc-${this.id}`).addEventListener('mouseover', () => {
+            targetsElem = true
+        })
+        document.querySelector(`.gbc-${this.id}`).addEventListener('mouseout', () => {
+            if (!isMouseDown) targetsElem = false
+        })
+
+
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX
+            const y = e.clientY
+
+            if (isMouseDown && targetsElem) {
+                p.x -= lastMouseX - x
+                p.y -= lastMouseY - y
+                p.updateMovement()
+            }
+
+            lastMouseX = x
+            lastMouseY = y
+        })
+
+        for (const fel of document.querySelectorAll(`.gbc-${this.id} .gbc-field`)) {
+            fel.addEventListener('click', () => {
+                fel.classList.toggle('gbc-marked')
+            })
+        }
     }
 
     export () {
         this.save.settings.zoom = this.zoom
+        this.save.settings.x = this.x
+        this.save.settings.y = this.y
         return JSON.stringify(this.save)
     }
 
@@ -62,6 +105,12 @@ class Gleisbild {
             field.style.width = `${640 * this.zoom}px`
             field.style.height = `${400 * this.zoom}px`
         }
+    }
+
+    updateMovement () {
+        const elem = document.querySelector(`.gbc-${this.id}`)
+        const fm = elem.querySelector('.gbc-fieldmap')
+        fm.style.transform = `translate(${this.x}px, ${this.y}px)`
     }
 
     addStyles () {
@@ -81,6 +130,9 @@ class Gleisbild {
                 .gbc-field {
                     width: 320px;
                     height: 200px;
+                }
+                .gbc-marked {
+                    background: red;
                 }
                 .gbc.edit-mode .gbc-field {
                     border: 1px solid gray;
