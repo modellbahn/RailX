@@ -9,6 +9,7 @@ class Gleisbild {
         this.zoom = this.save.settings.zoom || 0.2
         this.x = this.save.settings.x || 0
         this.y = this.save.settings.y || 0
+        this.eventHandlers = {}
         this.id = ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16))
 
         element.classList.add('gleisbild-container')
@@ -105,6 +106,18 @@ class Gleisbild {
         
     }
 
+    dispatch (event) {
+        if (!this.eventHandlers[event]) this.eventHandlers[event] = []
+        for (const handler of this.eventHandlers[event]) {
+            handler()
+        }
+    }
+
+    on (event, cb) {
+        if (!this.eventHandlers[event]) this.eventHandlers[event] = []
+        this.eventHandlers[event].push(cb)
+    }
+
     renderEmptyFields () {
         if (!this.showControls) return
         for (const field of document.querySelector(`.gbc-${this.id}`).querySelectorAll('.gbc-field')) {
@@ -139,12 +152,18 @@ class Gleisbild {
             field.style.height = `${400 * this.zoom}px`
             field.style.fontSize = `${120 * this.zoom}px`
         }
+
+        this.dispatch('change')
+        this.dispatch('size-change')
     }
 
     updateMovement () {
         const elem = document.querySelector(`.gbc-${this.id}`)
         const fm = elem.querySelector('.gbc-fieldmap')
         fm.style.transform = `translate(${this.x}px, ${this.y}px)`
+
+        this.dispatch('change')
+        this.dispatch('position-change')
     }
 
     addStyles () {

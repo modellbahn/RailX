@@ -36,9 +36,9 @@
     <div id="gleisbild"></div>
     <script>
         const gb = new Gleisbild('#gleisbild', 'edit', localStorage.getItem('gbtestsessionsave') || undefined)
-        setInterval(() => {
+        gb.on('change', () => {
             localStorage.setItem('gbtestsessionsave', gb.export())
-        }, 2000)
+        })
     </script>
 </body>
 </html>
