@@ -81,11 +81,7 @@ class Gleisbild {
             lastMouseY = y
         })
 
-        for (const fel of document.querySelectorAll(`.gbc-${this.id} .gbc-field`)) {
-            fel.addEventListener('click', () => {
-                fel.classList.toggle('gbc-marked')
-            })
-        }
+        
     }
 
     export () {
@@ -119,6 +115,7 @@ class Gleisbild {
             <style>
                 .gbc {
                     background: #fff;
+                    overflow: hidden;
                 }
                 .gbc-fieldmap {
                     display: flex;
@@ -126,13 +123,10 @@ class Gleisbild {
                     justify-content: center;
                     align-items: center;
                     flex-wrap:wrap;
+                    
                 }
                 .gbc-field {
-                    width: 320px;
-                    height: 200px;
-                }
-                .gbc-marked {
-                    background: red;
+                    
                 }
                 .gbc.edit-mode .gbc-field {
                     border: 1px solid gray;
