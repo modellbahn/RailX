@@ -36,25 +36,7 @@ class Gleisbild {
 
         let p = this
 
-        if (this.showControls) {
-            // Add button to toggle between modes
-            document.querySelector(`.gbc-${this.id}`).innerHTML += `<button class="gbc-togglemodebtn"><i class="fa-solid fa-book-open"></i></button>`
-            document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`).addEventListener('click', () => {
-                if (this.showControls) {
-                    this.showControls = false
-                    this.mode = 'view'
-                    document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`).innerHTML = '<i class="fa-solid fa-pen"></i>'
-                    p.removeEmptyFields()
-                } else {
-                    this.showControls = true
-                    this.mode = 'edit'
-                    document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`).innerHTML = '<i class="fa-solid fa-book-open"></i>'
-                    p.renderEmptyFields()
-                }
-                document.querySelector(`.gbc-${this.id}`).classList.toggle('edit-mode')
-            })
-        }
-
+        this.renderModeSwitchButton()
         this.updateSizes()
         this.updateMovement()
         this.renderEmptyFields()
@@ -104,7 +86,20 @@ class Gleisbild {
             lastMouseY = y
         })
 
-        
+
+        var all = ['/gleisbild/abteil.png', '/gleisbild/curve-down.png', '/gleisbild/curve-up.png', '/gleisbild/detector.png', '/gleisbild/entkupplungsgleis.png', '/gleisbild/portal.png', '/gleisbild/prellbock.png', '/gleisbild/signal.png', '/gleisbild/station.png', '/gleisbild/weiche-links.png', '/gleisbild/weiche-rechts.png',]
+        function onAllImagesLoaded() {}
+        function preload() {
+            var i = new Image()
+            var src = all.pop()
+            if (!src) {
+                onAllImagesLoaded()
+                return
+            }
+            i.src = src
+            i.onload = preload
+        }
+        preload()
     }
 
     dispatch (event) {
@@ -119,63 +114,93 @@ class Gleisbild {
         this.eventHandlers[event].push(cb)
     }
 
-    async openNewFieldDialogue () {
+    openNewFieldDialogue () {
         window.gbeionfdo = true
-        document.querySelector(`.gbc-${this.id}`).innerHTML += `
-            <div class="gbc-onfd">
-                <h1>Was möchten Sie hinzufügen?</h1>
-                <div class="gbc-onfd-cc">
-                    <div class="gbc-onfd-cc-e">
-                        <h2>Gleis-Abteil</h2>
-                        <div style="background-image:url('/gleisbild/abteil.png')" class="gbc-img-cc"></div>
-                    </div>
-                    <div class="gbc-onfd-cc-e">
-                        <h2>Kurve nach Unten</h2>
-                        <div style="background-image:url('/gleisbild/curve-down.png')" class="gbc-img-cc"></div>
-                    </div>
-                    <div class="gbc-onfd-cc-e">
-                        <h2>Kurve nach Oben</h2>
-                        <div style="background-image:url('/gleisbild/curve-up.png')" class="gbc-img-cc"></div>
-                    </div>
-                    <div class="gbc-onfd-cc-e">
-                        <h2>Zug Detector</h2>
-                        <div style="background-image:url('/gleisbild/detector.png')" class="gbc-img-cc"></div>
-                    </div>
-                    <div class="gbc-onfd-cc-e">
-                        <h2>Entkupplungsgleis</h2>
-                        <div style="background-image:url('/gleisbild/entkupplungsgleis.png')" class="gbc-img-cc"></div>
-                    </div>
-                    <div class="gbc-onfd-cc-e">
-                        <h2>Weiche Links</h2>
-                        <div style="background-image:url('/gleisbild/weiche-links.png')" class="gbc-img-cc"></div>
-                    </div>
-                    <div class="gbc-onfd-cc-e">
-                        <h2>Weiche Rechts</h2>
-                        <div style="background-image:url('/gleisbild/weiche-rechts.png')" class="gbc-img-cc"></div>
-                    </div>
-                    <div class="gbc-onfd-cc-e">
-                        <h2>Signal</h2>
-                        <div style="background-image:url('/gleisbild/signal.png')" class="gbc-img-cc"></div>
-                    </div>
-                    <div class="gbc-onfd-cc-e">
-                        <h2>Bahnhof / Haltepunkt</h2>
-                        <div style="background-image:url('/gleisbild/station.png')" class="gbc-img-cc"></div>
-                    </div>
-                    <div class="gbc-onfd-cc-e">
-                        <h2>Prellbock</h2>
-                        <div style="background-image:url('/gleisbild/prellbock.png')" class="gbc-img-cc"></div>
-                    </div>
-                    <div class="gbc-onfd-cc-e">
-                        <h2>Portal-Verbinder</h2>
-                        <div style="background-image:url('/gleisbild/portal.png')" class="gbc-img-cc"></div>
-                    </div>
-                    <div class="gbc-onfd-cc-e">
-                        <h2>Gleis-Abteil</h2>
-                        <div style="background-image:url('/gleisbild/abteil.png')" class="gbc-img-cc"></div>
+        return new Promise(resolve => {
+            document.querySelector(`.gbc-${this.id}`).innerHTML += `
+                <div class="gbc-onfd">
+                    <h1>Was möchten Sie hinzufügen? <i class="fa-solid fa-square-xmark gbc-onfd-close-btn"></i></h1>
+                    <div class="gbc-onfd-cc">
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Gleis-Abteil</h2>
+                            <div style="background-image:url('/gleisbild/abteil.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Kurve nach Unten</h2>
+                            <div style="background-image:url('/gleisbild/curve-down.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Kurve nach Oben</h2>
+                            <div style="background-image:url('/gleisbild/curve-up.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Zug Detector</h2>
+                            <div style="background-image:url('/gleisbild/detector.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Entkupplungsgleis</h2>
+                            <div style="background-image:url('/gleisbild/entkupplungsgleis.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Weiche Links</h2>
+                            <div style="background-image:url('/gleisbild/weiche-links.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Weiche Rechts</h2>
+                            <div style="background-image:url('/gleisbild/weiche-rechts.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Signal</h2>
+                            <div style="background-image:url('/gleisbild/signal.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Bahnhof / Haltepunkt</h2>
+                            <div style="background-image:url('/gleisbild/station.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Prellbock</h2>
+                            <div style="background-image:url('/gleisbild/prellbock.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Portal-Verbinder</h2>
+                            <div style="background-image:url('/gleisbild/portal.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Gleis-Abteil</h2>
+                            <div style="background-image:url('/gleisbild/abteil.png')" class="gbc-img-cc"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `
+            `
+            document.querySelector(`.gbc-${this.id}`).querySelector('.gbc-onfd-close-btn').addEventListener('click', () => {
+                document.querySelector(`.gbc-${this.id} .gbc-onfd`).outerHTML = ''
+                window.gbeionfdo = false
+                return resolve(0)
+            })
+        })
+    }
+
+    renderModeSwitchButton () {
+        let p = this
+        if (this.showControls) {
+            // Add button to toggle between modes
+            (document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`) || { outerHTML: '' }).outerHTML = ''
+            document.querySelector(`.gbc-${this.id}`).innerHTML += `<button class="gbc-togglemodebtn"><i class="fa-solid fa-book-open"></i></button>`
+            document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`).addEventListener('click', () => {
+                if (this.showControls) {
+                    this.showControls = false
+                    this.mode = 'view'
+                    document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`).innerHTML = '<i class="fa-solid fa-pen"></i>'
+                    p.removeEmptyFields()
+                } else {
+                    this.showControls = true
+                    this.mode = 'edit'
+                    document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`).innerHTML = '<i class="fa-solid fa-book-open"></i>'
+                    p.renderEmptyFields()
+                }
+                document.querySelector(`.gbc-${this.id}`).classList.toggle('edit-mode')
+            })
+        }
     }
 
     renderEmptyFields () {
@@ -186,9 +211,13 @@ class Gleisbild {
                 field.classList.add('gbc-empty-field')
                 field.innerHTML = `<i class="fa-solid fa-circle-plus"></i>`
                 field.querySelector('i').addEventListener('click', async () => {
+                    console.log('m')
                     if (window.gbeionfdo) return
+                    console.log('e')
                     const type = await p.openNewFieldDialogue()
+                    
                     console.log(type)
+                    console.log(window.gbeinonfdo)
                 })
             }
         }
@@ -197,6 +226,7 @@ class Gleisbild {
     removeEmptyFields () {
         for (const field of document.querySelectorAll(`.gbc-${this.id} .gbc-empty-field`)) {
             field.innerHTML = ''
+            field.classList.remove('gbc-empty-field')
         }
     }
 
@@ -308,6 +338,9 @@ class Gleisbild {
                     width: 95%;
                     background-size: contain;
                     background-repeat: no-repeat;
+                }
+                .gbc-onfd-close-btn {
+                    cursor: pointer;
                 }
                 .gbc-fieldmap {
                     display: flex;
