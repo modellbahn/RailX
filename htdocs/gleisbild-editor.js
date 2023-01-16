@@ -127,51 +127,51 @@ class Gleisbild {
                 <div class="gbc-onfd-cc">
                     <div class="gbc-onfd-cc-e">
                         <h2>Gleis-Abteil</h2>
-                        <img src="/gleisbild/abteil.svg">
+                        <div style="background-image:url('/gleisbild/abteil.png')" class="gbc-img-cc"></div>
                     </div>
                     <div class="gbc-onfd-cc-e">
                         <h2>Kurve nach Unten</h2>
-                        <img src="/gleisbild/curve-down.svg">
+                        <div style="background-image:url('/gleisbild/curve-down.png')" class="gbc-img-cc"></div>
                     </div>
                     <div class="gbc-onfd-cc-e">
                         <h2>Kurve nach Oben</h2>
-                        <img src="/gleisbild/curve-up.svg">
+                        <div style="background-image:url('/gleisbild/curve-up.png')" class="gbc-img-cc"></div>
                     </div>
                     <div class="gbc-onfd-cc-e">
                         <h2>Zug Detector</h2>
-                        <img src="/gleisbild/detector.svg">
+                        <div style="background-image:url('/gleisbild/detector.png')" class="gbc-img-cc"></div>
                     </div>
                     <div class="gbc-onfd-cc-e">
                         <h2>Entkupplungsgleis</h2>
-                        <img src="/gleisbild/entkupplungsgleis.svg">
+                        <div style="background-image:url('/gleisbild/entkupplungsgleis.png')" class="gbc-img-cc"></div>
                     </div>
                     <div class="gbc-onfd-cc-e">
                         <h2>Weiche Links</h2>
-                        <img src="/gleisbild/weiche-links.svg">
+                        <div style="background-image:url('/gleisbild/weiche-links.png')" class="gbc-img-cc"></div>
                     </div>
                     <div class="gbc-onfd-cc-e">
                         <h2>Weiche Rechts</h2>
-                        <img src="/gleisbild/weiche-rechts.svg">
+                        <div style="background-image:url('/gleisbild/weiche-rechts.png')" class="gbc-img-cc"></div>
                     </div>
                     <div class="gbc-onfd-cc-e">
                         <h2>Signal</h2>
-                        <img src="/gleisbild/signal.svg">
+                        <div style="background-image:url('/gleisbild/signal.png')" class="gbc-img-cc"></div>
                     </div>
                     <div class="gbc-onfd-cc-e">
                         <h2>Bahnhof / Haltepunkt</h2>
-                        <img src="/gleisbild/station.svg">
+                        <div style="background-image:url('/gleisbild/station.png')" class="gbc-img-cc"></div>
                     </div>
                     <div class="gbc-onfd-cc-e">
                         <h2>Prellbock</h2>
-                        <img src="/gleisbild/prellbock.svg">
+                        <div style="background-image:url('/gleisbild/prellbock.png')" class="gbc-img-cc"></div>
                     </div>
                     <div class="gbc-onfd-cc-e">
                         <h2>Portal-Verbinder</h2>
-                        <img src="/gleisbild/portal.svg">
+                        <div style="background-image:url('/gleisbild/portal.png')" class="gbc-img-cc"></div>
                     </div>
                     <div class="gbc-onfd-cc-e">
                         <h2>Gleis-Abteil</h2>
-                        <img src="/gleisbild/abteil.svg">
+                        <div style="background-image:url('/gleisbild/abteil.png')" class="gbc-img-cc"></div>
                     </div>
                 </div>
             </div>
@@ -301,12 +301,13 @@ class Gleisbild {
                     font-size: 75%;
                     margin-bottom: 2%;
                 }
-                .gbc-onfd-cc-e img {
+                .gbc-onfd-cc-e .gbc-img-cc {
                     aspect-ratio: 640 / 400;
                     height: auto;
                     max-height: 90%;
-                    width: auto;
-                    max-width: 95%;
+                    width: 95%;
+                    background-size: contain;
+                    background-repeat: no-repeat;
                 }
                 .gbc-fieldmap {
                     display: flex;
