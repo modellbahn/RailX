@@ -36,6 +36,67 @@ class Gleisbild {
 
         let p = this
 
+        document.querySelector(`.gbc-${this.id}`).innerHTML += `
+                <div class="gbc-onfd gbc-hidden">
+                    <h1>Was möchten Sie hinzufügen? <i class="fa-solid fa-square-xmark gbc-onfd-close-btn"></i></h1>
+                    <div class="gbc-onfd-cc">
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Gleis-Abteil</h2>
+                            <div style="background-image:url('/gleisbild/abteil.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Kurve nach Unten</h2>
+                            <div style="background-image:url('/gleisbild/curve-down.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Kurve nach Oben</h2>
+                            <div style="background-image:url('/gleisbild/curve-up.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Zug Detector</h2>
+                            <div style="background-image:url('/gleisbild/detector.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Entkupplungsgleis</h2>
+                            <div style="background-image:url('/gleisbild/entkupplungsgleis.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Weiche Links</h2>
+                            <div style="background-image:url('/gleisbild/weiche-links.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Weiche Rechts</h2>
+                            <div style="background-image:url('/gleisbild/weiche-rechts.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Signal</h2>
+                            <div style="background-image:url('/gleisbild/signal.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Bahnhof / Haltepunkt</h2>
+                            <div style="background-image:url('/gleisbild/station.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Prellbock</h2>
+                            <div style="background-image:url('/gleisbild/prellbock.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Portal-Verbinder</h2>
+                            <div style="background-image:url('/gleisbild/portal.png')" class="gbc-img-cc"></div>
+                        </div>
+                        <div class="gbc-onfd-cc-e">
+                            <h2>Gleis-Abteil</h2>
+                            <div style="background-image:url('/gleisbild/abteil.png')" class="gbc-img-cc"></div>
+                        </div>
+                    </div>
+                </div>
+        `
+        setTimeout(() => {
+            document.querySelector(`.gbc-${this.id} .gbc-onfd-close-btn`).addEventListener('click', () => {
+                window.gbcCurrentOnfdResolve(null)
+            })
+        }, 200)
+
         this.renderModeSwitchButton()
         this.updateSizes()
         this.updateMovement()
@@ -117,66 +178,12 @@ class Gleisbild {
     openNewFieldDialogue () {
         window.gbeionfdo = true
         return new Promise(resolve => {
-            document.querySelector(`.gbc-${this.id}`).innerHTML += `
-                <div class="gbc-onfd">
-                    <h1>Was möchten Sie hinzufügen? <i class="fa-solid fa-square-xmark gbc-onfd-close-btn"></i></h1>
-                    <div class="gbc-onfd-cc">
-                        <div class="gbc-onfd-cc-e">
-                            <h2>Gleis-Abteil</h2>
-                            <div style="background-image:url('/gleisbild/abteil.png')" class="gbc-img-cc"></div>
-                        </div>
-                        <div class="gbc-onfd-cc-e">
-                            <h2>Kurve nach Unten</h2>
-                            <div style="background-image:url('/gleisbild/curve-down.png')" class="gbc-img-cc"></div>
-                        </div>
-                        <div class="gbc-onfd-cc-e">
-                            <h2>Kurve nach Oben</h2>
-                            <div style="background-image:url('/gleisbild/curve-up.png')" class="gbc-img-cc"></div>
-                        </div>
-                        <div class="gbc-onfd-cc-e">
-                            <h2>Zug Detector</h2>
-                            <div style="background-image:url('/gleisbild/detector.png')" class="gbc-img-cc"></div>
-                        </div>
-                        <div class="gbc-onfd-cc-e">
-                            <h2>Entkupplungsgleis</h2>
-                            <div style="background-image:url('/gleisbild/entkupplungsgleis.png')" class="gbc-img-cc"></div>
-                        </div>
-                        <div class="gbc-onfd-cc-e">
-                            <h2>Weiche Links</h2>
-                            <div style="background-image:url('/gleisbild/weiche-links.png')" class="gbc-img-cc"></div>
-                        </div>
-                        <div class="gbc-onfd-cc-e">
-                            <h2>Weiche Rechts</h2>
-                            <div style="background-image:url('/gleisbild/weiche-rechts.png')" class="gbc-img-cc"></div>
-                        </div>
-                        <div class="gbc-onfd-cc-e">
-                            <h2>Signal</h2>
-                            <div style="background-image:url('/gleisbild/signal.png')" class="gbc-img-cc"></div>
-                        </div>
-                        <div class="gbc-onfd-cc-e">
-                            <h2>Bahnhof / Haltepunkt</h2>
-                            <div style="background-image:url('/gleisbild/station.png')" class="gbc-img-cc"></div>
-                        </div>
-                        <div class="gbc-onfd-cc-e">
-                            <h2>Prellbock</h2>
-                            <div style="background-image:url('/gleisbild/prellbock.png')" class="gbc-img-cc"></div>
-                        </div>
-                        <div class="gbc-onfd-cc-e">
-                            <h2>Portal-Verbinder</h2>
-                            <div style="background-image:url('/gleisbild/portal.png')" class="gbc-img-cc"></div>
-                        </div>
-                        <div class="gbc-onfd-cc-e">
-                            <h2>Gleis-Abteil</h2>
-                            <div style="background-image:url('/gleisbild/abteil.png')" class="gbc-img-cc"></div>
-                        </div>
-                    </div>
-                </div>
-            `
-            document.querySelector(`.gbc-${this.id}`).querySelector('.gbc-onfd-close-btn').addEventListener('click', () => {
-                document.querySelector(`.gbc-${this.id} .gbc-onfd`).outerHTML = ''
+            document.querySelector(`.gbc-${this.id} .gbc-onfd`).classList.remove('gbc-hidden')
+            window.gbcCurrentOnfdResolve = (val) => {
+                document.querySelector(`.gbc-${this.id} .gbc-onfd`).classList.add('gbc-hidden')
                 window.gbeionfdo = false
-                return resolve(0)
-            })
+                resolve(val)
+            }
         })
     }
 
@@ -264,7 +271,7 @@ class Gleisbild {
 
     addStyles () {
         window.gbESa = true
-        document.querySelector('body').innerHTML += `
+        document.querySelector('head').innerHTML += `
             <style>
                 .gbc {
                     background: #fff;
@@ -348,6 +355,9 @@ class Gleisbild {
                     justify-content: center;
                     align-items: center;
                     flex-wrap: wrap;
+                }
+                .gbc-hidden {
+                    display: none;
                 }
                 .gbc-field {
                     
