@@ -147,35 +147,53 @@ class Gleisbild {
 
         let isMouseDown = false
         let targetsElem = false
-        let lastMouseX = 0
-        let lastMouseY = 0
-        document.addEventListener('mousedown', () => {
+        let initialTouchX = 0
+        let initialTouchY = 0
+
+        // Add mouse event listeners
+        document.addEventListener('mousedown', (e) => {
             isMouseDown = true
+            targetsElem = e.target.closest(`.gbc-${this.id}`) !== null
+            initialTouchX = e.clientX
+            initialTouchY = e.clientY
         })
         document.addEventListener('mouseup', () => {
             isMouseDown = false
+            targetsElem = false
         })
-        document.querySelector(`.gbc-${this.id}`).addEventListener('mouseover', () => {
-            targetsElem = true
-        })
-        document.querySelector(`.gbc-${this.id}`).addEventListener('mouseout', () => {
-            if (!isMouseDown) targetsElem = false
-        })
-
 
         document.addEventListener('mousemove', (e) => {
-            const x = e.clientX
-            const y = e.clientY
-
             if (isMouseDown && targetsElem && !window.gbeionfdo) {
-                p.x -= lastMouseX - x
-                p.y -= lastMouseY - y
-                p.updateMovement()
+                requestAnimationFrame(() => {
+                    p.x -= initialTouchX - e.clientX
+                    p.y -= initialTouchY - e.clientY
+                    p.updateMovement()
+                })
             }
-
-            lastMouseX = x
-            lastMouseY = y
         })
+
+        // Add touch event listeners
+        document.addEventListener('touchstart', (e) => {
+            isMouseDown = true
+            targetsElem = e.target.closest(`.gbc-${this.id}`) !== null
+            initialTouchX = e.touches[0].clientX
+            initialTouchY = e.touches[0].clientY
+        })
+        document.addEventListener('touchend', () => {
+            isMouseDown = false
+            targetsElem = false
+        })
+
+        document.addEventListener('touchmove', (e) => {
+            if (isMouseDown && targetsElem && !window.gbeionfdo) {
+                requestAnimationFrame(() => {
+                    p.x -= initialTouchX - e.touches[0].clientX
+                    p.y -= initialTouchY - e.touches[0].clientY
+                    p.updateMovement()
+                })
+            }
+        })
+
 
 
         var all = ['/gleisbild/abteil.png', '/gleisbild/curve-down.png', '/gleisbild/curve-up.png', '/gleisbild/detector.png', '/gleisbild/entkupplungsgleis.png', '/gleisbild/portal.png', '/gleisbild/prellbock.png', '/gleisbild/signal.png', '/gleisbild/station.png', '/gleisbild/weiche-links.png', '/gleisbild/weiche-rechts.png',]
