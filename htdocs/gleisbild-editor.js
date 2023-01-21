@@ -123,8 +123,8 @@ class Gleisbild {
         })
 
         document.querySelector(`.gbc-${this.id}`).addEventListener('touchstart', (event) => {
-            event.preventDefault();
             if (event.touches.length === 2) {
+                event.preventDefault();
                 window.gbeionfdo = true
                 tzInitialDistance = getDistance(event.touches[0], event.touches[1])
             }
@@ -147,16 +147,14 @@ class Gleisbild {
 
         let isMouseDown = false
         let targetsElem = false
-        let initialTouchX = 0
-        let initialTouchY = 0
+        let tmLastMovementX = 0
+        let tmLastMovementY = 0
 
-        // Add mouse event listeners
-        document.addEventListener('mousedown', (e) => {
+        document.querySelector(`.gbc-${this.id}`).addEventListener('mousedown', (e) => {
             isMouseDown = true
             targetsElem = e.target.closest(`.gbc-${this.id}`) !== null
-            initialTouchX = e.clientX
-            initialTouchY = e.clientY
         })
+
         document.addEventListener('mouseup', () => {
             isMouseDown = false
             targetsElem = false
@@ -164,21 +162,21 @@ class Gleisbild {
 
         document.addEventListener('mousemove', (e) => {
             if (isMouseDown && targetsElem && !window.gbeionfdo) {
-                requestAnimationFrame(() => {
-                    p.x -= initialTouchX - e.clientX
-                    p.y -= initialTouchY - e.clientY
-                    p.updateMovement()
-                })
+                p.x += e.movementX
+                p.y += e.movementY
+                p.updateMovement()
             }
         })
 
         // Add touch event listeners
-        document.addEventListener('touchstart', (e) => {
+        document.querySelector(`.gbc-${this.id}`).addEventListener('touchstart', (e) => {
+            if (e.touches.length !== 1) return
             isMouseDown = true
             targetsElem = e.target.closest(`.gbc-${this.id}`) !== null
-            initialTouchX = e.touches[0].clientX
-            initialTouchY = e.touches[0].clientY
+            tmLastMovementX = e.touches[0].clientX
+            tmLastMovementY = e.touches[0].clientY
         })
+
         document.addEventListener('touchend', () => {
             isMouseDown = false
             targetsElem = false
@@ -186,11 +184,14 @@ class Gleisbild {
 
         document.addEventListener('touchmove', (e) => {
             if (isMouseDown && targetsElem && !window.gbeionfdo) {
-                requestAnimationFrame(() => {
-                    p.x -= initialTouchX - e.touches[0].clientX
-                    p.y -= initialTouchY - e.touches[0].clientY
-                    p.updateMovement()
-                })
+                const touch = e.touches[0];
+                let movementX = touch.clientX - tmLastMovementX;
+                let movementY = touch.clientY - tmLastMovementY;
+                p.x += movementX
+                p.y += movementY
+                p.updateMovement()
+                tmLastMovementX = touch.clientX;
+                tmLastMovementY = touch.clientY;
             }
         })
 
