@@ -102,7 +102,14 @@ class Gleisbild {
         this.updateMovement()
         this.renderEmptyFields()
 
-        document.querySelector(`.gbc-${this.id}`).addEventListener('wheel', function (e) {
+        function getDistance(touch1, touch2) {
+            var xDiff = touch1.clientX - touch2.clientX
+            var yDiff = touch1.clientY - touch2.clientY
+            return Math.sqrt(xDiff * xDiff + yDiff * yDiff)
+        }
+        let tzInitialDistance = null
+        const threshold = 0.001
+        document.querySelector(`.gbc-${this.id}`).addEventListener('wheel', (e) => {
             if (window.gbeionfdo) return
             e.preventDefault()
             if (e.deltaY < 0) {
@@ -113,6 +120,29 @@ class Gleisbild {
                 p.zoom -= 0.01
                 p.updateSizes()
             }
+        })
+
+        document.querySelector(`.gbc-${this.id}`).addEventListener('touchstart', (event) => {
+            event.preventDefault();
+            if (event.touches.length === 2) {
+                window.gbeionfdo = true
+                tzInitialDistance = getDistance(event.touches[0], event.touches[1])
+            }
+        })
+
+        document.querySelector(`.gbc-${this.id}`).addEventListener('touchmove', (event) => {
+            event.preventDefault();
+            if (event.touches.length === 2) {
+                if (Math.abs(event.scale - 1) > threshold) {
+                    p.zoom += (event.scale - 1) * 0.02;
+                    p.updateSizes();
+                }
+            }
+        })
+
+        document.querySelector(`.gbc-${this.id}`).addEventListener('touchend', (event) => {
+            window.gbeionfdo = false
+            tzInitialDistance = null
         })
 
         let isMouseDown = false
