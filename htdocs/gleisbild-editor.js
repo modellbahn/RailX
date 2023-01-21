@@ -34,59 +34,124 @@ class Gleisbild {
             this.addStyles()
         }
 
+        this.elementList = {
+            abteil: {
+                id: 'abteil',
+                name: 'Gleis-Abteil',
+                imgUrl: '/gleisbild/abteil.png',
+                svgCode: ''
+            },
+            'curve-down': {
+                id: 'curve-down',
+                name: 'Kurve nach Unten',
+                imgUrl: '/gleisbild/curve-down',
+                svgCode: ''
+            },
+            'curve-up': {
+                id: 'curve-up',
+                name: 'Kurve nach Oben',
+                imgUrl: '/gleisbild/curve-up',
+                svgCode: ''
+            },
+            detector: {
+                id: 'detector',
+                name: 'Zug-Detector',
+                imgUrl: '/gleisbild/detector.png',
+                svgCode: ''
+            },
+            entkupplungsgleis: {
+                id: 'entkupplungsgleis',
+                name: 'Entkupplungsgleis',
+                imgUrl: '/gleisbild/entkupplungsgleis.png',
+                svgCode: ''
+            },
+            portal: {
+                id: 'portal',
+                name: 'Portal-Verbinder',
+                imgUrl: '/gleisbild/portal.png',
+                svgCode: ''
+            },
+            prellbock: {
+                id: 'prellbock',
+                name: 'Prellbock',
+                imgUrl: '/gleisbild/prellbock.png',
+                svgCode: ''
+            },
+            signal: {
+                id: 'signal',
+                name: 'Signal',
+                imgUrl: '/gleisbild/signal.png',
+                svgCode: ''
+            },
+            station: {
+                id: 'station',
+                name: 'Bahnhof / Haltepunkt',
+                imgUrl: '/gleisbild/station.png',
+                svgCode: ''
+            },
+            'weiche-links': {
+                id: 'weiche-links',
+                name: 'Weiche Links',
+                imgUrl: '/gleisbild/weiche-links.png',
+                svgCode: ''
+            },
+            'weiche-rechts': {
+                id: 'weiche-rechts',
+                name: 'Weiche Rechts',
+                imgUrl: '/gleisbild/weiche-rechts.png',
+                svgCode: ''
+            }
+        }
+
         let p = this
 
         document.querySelector(`.gbc-${this.id}`).innerHTML += `
                 <div class="gbc-onfd gbc-hidden">
                     <h1>Was möchten Sie hinzufügen? <i class="fa-solid fa-square-xmark gbc-onfd-close-btn"></i></h1>
                     <div class="gbc-onfd-cc">
-                        <div class="gbc-onfd-cc-e">
+                        <div class="gbc-onfd-cc-e gbc-onfd-cc-e-abteil">
                             <h2>Gleis-Abteil</h2>
                             <div style="background-image:url('/gleisbild/abteil.png')" class="gbc-img-cc"></div>
                         </div>
-                        <div class="gbc-onfd-cc-e">
+                        <div class="gbc-onfd-cc-e  gbc-onfd-cc-e-curve-down">
                             <h2>Kurve nach Unten</h2>
                             <div style="background-image:url('/gleisbild/curve-down.png')" class="gbc-img-cc"></div>
                         </div>
-                        <div class="gbc-onfd-cc-e">
+                        <div class="gbc-onfd-cc-e  gbc-onfd-cc-e-curve-up">
                             <h2>Kurve nach Oben</h2>
                             <div style="background-image:url('/gleisbild/curve-up.png')" class="gbc-img-cc"></div>
                         </div>
-                        <div class="gbc-onfd-cc-e">
+                        <div class="gbc-onfd-cc-e gbc-onfd-cc-e-detector">
                             <h2>Zug Detector</h2>
                             <div style="background-image:url('/gleisbild/detector.png')" class="gbc-img-cc"></div>
                         </div>
-                        <div class="gbc-onfd-cc-e">
+                        <div class="gbc-onfd-cc-e  gbc-onfd-cc-e-entkupplungsgleis">
                             <h2>Entkupplungsgleis</h2>
                             <div style="background-image:url('/gleisbild/entkupplungsgleis.png')" class="gbc-img-cc"></div>
                         </div>
-                        <div class="gbc-onfd-cc-e">
+                        <div class="gbc-onfd-cc-e gbc-onfd-cc-e-weiche-links">
                             <h2>Weiche Links</h2>
                             <div style="background-image:url('/gleisbild/weiche-links.png')" class="gbc-img-cc"></div>
                         </div>
-                        <div class="gbc-onfd-cc-e">
+                        <div class="gbc-onfd-cc-e gbc-onfd-cc-e-weiche-rechts">
                             <h2>Weiche Rechts</h2>
                             <div style="background-image:url('/gleisbild/weiche-rechts.png')" class="gbc-img-cc"></div>
                         </div>
-                        <div class="gbc-onfd-cc-e">
+                        <div class="gbc-onfd-cc-e gbc-onfd-cc-e-signal">
                             <h2>Signal</h2>
                             <div style="background-image:url('/gleisbild/signal.png')" class="gbc-img-cc"></div>
                         </div>
-                        <div class="gbc-onfd-cc-e">
+                        <div class="gbc-onfd-cc-e gbc-onfd-cc-e-station">
                             <h2>Bahnhof / Haltepunkt</h2>
                             <div style="background-image:url('/gleisbild/station.png')" class="gbc-img-cc"></div>
                         </div>
-                        <div class="gbc-onfd-cc-e">
+                        <div class="gbc-onfd-cc-e gbc-onfd-cc-e-prellbock">
                             <h2>Prellbock</h2>
                             <div style="background-image:url('/gleisbild/prellbock.png')" class="gbc-img-cc"></div>
                         </div>
-                        <div class="gbc-onfd-cc-e">
+                        <div class="gbc-onfd-cc-e  gbc-onfd-cc-e-portal">
                             <h2>Portal-Verbinder</h2>
                             <div style="background-image:url('/gleisbild/portal.png')" class="gbc-img-cc"></div>
-                        </div>
-                        <div class="gbc-onfd-cc-e">
-                            <h2>Gleis-Abteil</h2>
-                            <div style="background-image:url('/gleisbild/abteil.png')" class="gbc-img-cc"></div>
                         </div>
                     </div>
                 </div>
@@ -95,6 +160,12 @@ class Gleisbild {
             document.querySelector(`.gbc-${this.id} .gbc-onfd-close-btn`).addEventListener('click', () => {
                 window.gbcCurrentOnfdResolve(null)
             })
+
+            for (const ce of document.querySelectorAll(`.gbc-${this.id} .gbc-onfd-cc-e`)) {
+                ce.addEventListener('click', (e) => {
+                    window.gbcCurrentOnfdResolve(p.elementList[e.target.closest('.gbc-onfd-cc-e').classList[1].replace('gbc-onfd-cc-e-', '')])
+                })
+            }
         }, 200)
 
         this.renderModeSwitchButton()
@@ -267,9 +338,7 @@ class Gleisbild {
                 field.classList.add('gbc-empty-field')
                 field.innerHTML = `<i class="fa-solid fa-circle-plus"></i>`
                 field.querySelector('i').addEventListener('click', async () => {
-                    console.log('m')
                     if (window.gbeionfdo) return
-                    console.log('e')
                     const type = await p.openNewFieldDialogue()
                     
                     console.log(type)
