@@ -341,8 +341,14 @@ class Gleisbild {
         field.innerHTML = `
             ${svgCode}
         `
-        field.querySelector('.gbc-svg').setAttribute('width', 640 * this.zoom)
-        field.querySelector('.gbc-svg').setAttribute('height', 400 * this.zoom)
+        if (field.querySelector('.gbc-svg')) {
+            field.querySelector('.gbc-svg').setAttribute('width', 640 * this.zoom)
+            field.querySelector('.gbc-svg').setAttribute('height', 400 * this.zoom)
+            for (const path of field.querySelector('.gbc-svg').querySelectorAll('path')) {
+                if (!path.getAttribute('original-stroke-width')) path.setAttribute('original-stroke-width', path.style.strokeWidth)
+                path.style.strokeWidth = path.getAttribute('original-stroke-width') * this.zoom
+            }
+        }
     }
 
     renderFields () {
@@ -416,6 +422,11 @@ class Gleisbild {
             if (field.querySelector('.gbc-svg')) {
                 field.querySelector('.gbc-svg').setAttribute('width', 640 * this.zoom)
                 field.querySelector('.gbc-svg').setAttribute('height', 400 * this.zoom)
+                for (const path of field.querySelector('.gbc-svg').querySelectorAll('path')) {
+                    path.style.strokeWidth = path.style.strokeWidth * this.zoom
+                    if (!path.getAttribute('original-stroke-width')) path.setAttribute('original-stroke-width', path.style.strokeWidth)
+                    path.style.strokeWidth = path.getAttribute('original-stroke-width') * this.zoom
+                }
             }
         }
 
