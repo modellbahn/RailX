@@ -10,6 +10,7 @@ class Gleisbild {
         this.zoom = this.save.settings.zoom || 0.2
         this.x = this.save.settings.x || 0
         this.y = this.save.settings.y || 0
+        this.elements = this.save.elements || []
         this.eventHandlers = {}
         this.id = ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16))
 
@@ -174,7 +175,7 @@ class Gleisbild {
                 </div>
         `
         setTimeout(() => {
-            document.querySelector(`.gbc-${this.id} .gbc-onfd-close-btn`).addEventListener('click', () => {
+            document.querySelector(`.gbc-${this.id} .gbc-onfd-close-btn`).addEventListener('click', function gbcel1() {
                 window.gbcCurrentOnfdResolve(null)
             })
 
@@ -299,6 +300,10 @@ class Gleisbild {
             i.onload = preload
         }
         preload()
+
+        ;(new MutationObserver(() => {
+            p.reconstruct()
+        })).observe(document.body, { characterData: false, childList: true, attributes: false })
     }
 
     reconstruct () {
@@ -311,13 +316,20 @@ class Gleisbild {
             return newGB.export()
         }
         this.on = newGB.on
+        this.setElemArray = (arr) => {
+            return newGB.setElemArray(arr)
+        }
         return newGB
     }
 
-    dispatch (event) {
+    setElemArray (arr) {
+        this.elements = arr
+    }
+
+    dispatch (event, value = null) {
         if (!this.eventHandlers[event]) this.eventHandlers[event] = []
         for (const handler of this.eventHandlers[event]) {
-            handler()
+            handler(value)
         }
     }
 
@@ -344,7 +356,7 @@ class Gleisbild {
             // Add button to toggle between modes
             (document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`) || { outerHTML: '' }).outerHTML = ''
             document.querySelector(`.gbc-${this.id}`).innerHTML += `<button class="gbc-togglemodebtn"><i class="fa-solid fa-book-open"></i></button>`
-            document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`).addEventListener('click', () => {
+            document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`).addEventListener('click', function gbcel2 () {
                 if (this.showControls) {
                     this.showControls = false
                     this.mode = 'view'
@@ -364,7 +376,7 @@ class Gleisbild {
     renderField (field) {
         const x = field.dataset.gbfColumn
         const y = field.dataset.gbfRow
-        const elementData = this.save.elements.filter(e => e.x === x && e.y === y)[0]
+        const elementData = this.elements.filter(e => e.x === x && e.y === y)[0]
         const { rotation, properties, type } = elementData
         const svgCode = this.elementList[type].svgCode
         const p = this
@@ -372,26 +384,50 @@ class Gleisbild {
         field.innerHTML = `
             ${svgCode}
         `
+
+        console.log(rotation)
+        if (rotation === 180) {
+            console.log(field)
+            document.querySelector(`.gbc-${this.id} .gbc-field[data-gbf-column="${x}"][data-gbf-row="${y}"]`).classList.add('gbc-rotate-180')
+        } else {
+            document.querySelector(`.gbc-${this.id} .gbc-field[data-gbf-column="${x}"][data-gbf-row="${y}"]`).classList.remove('gbc-rotate-180')
+        }
+
         if (field.querySelector('svg')) {
             field.querySelector('svg').setAttribute('width', 640 * this.zoom)
             field.querySelector('svg').setAttribute('height', 400 * this.zoom)
-            field.querySelector('svg').style.transform = `rotate(${rotation}deg)`
             for (const path of field.querySelector('svg').querySelectorAll('path')) {
                 if (!path.getAttribute('original-stroke-width')) path.setAttribute('original-stroke-width', path.style.strokeWidth)
                 path.style.strokeWidth = path.getAttribute('original-stroke-width') * this.zoom
             }
-            field.querySelector('svg .gbc-cog').addEventListener('click', () => {
+            field.querySelector('svg .gbc-cog').addEventListener('click', function gbcel3 () {
                 document.body.innerHTML += `
                     <div class="gbc-epcc">
                         <h2>${p.elementList[type].name}</h2>
+                        <button class="gbc-epcc-rotate-btn">Drehen</button>
                     </div>
                 `
+                document.querySelector('.gbc-epcc-rotate-btn').addEventListener('click', function gbcel4 () {
+                    let arr = []
+                    for (let item of p.save.elements) {
+                        if (item.x === x && item.y === y) {
+                            item.rotation += 180
+                            if (item.rotation > 360) item.rotation -= 360
+                        }
+                        arr.push(item)
+                    }
+                    p.setElemArray(arr)
+                    p.dispatch('rotation-change')
+                    p.dispatch('field-change')
+                    p.dispatch('change')
+                    p.renderField(field)
+                })
             })
         }
     }
 
     renderFields () {
-        for (const element of this.save.elements) {
+        for (const element of this.elements) {
             const { x, y } = element
             const field = document.querySelector(`.gbc-${this.id} .gbc-field[data-gbf-row="${y}"][data-gbf-column="${x}"]`)
             if (!field) return
@@ -400,8 +436,8 @@ class Gleisbild {
     }
 
     addField ([x, y], type) {
-        this.save.elements = Array.isArray(this.save.elements) ? this.save.elements : []
-        this.save.elements.push({
+        this.elements = Array.isArray(this.elements) ? this.elements : []
+        this.elements.push({
             x,
             y,
             rotation: 0,
@@ -444,6 +480,7 @@ class Gleisbild {
         this.save.settings.zoom = this.zoom
         this.save.settings.x = this.x
         this.save.settings.y = this.y
+        this.save.elements = this.elements
         return JSON.stringify(this.save)
     }
 
@@ -616,6 +653,9 @@ class Gleisbild {
                 .gbc-epcc h2 {
                     color: #b83434;
                     margin-bottom: 1%;
+                }
+                .gbc-rotate-180 {
+                    transform: rotate(180deg) !important;
                 }
             </style>
         `
