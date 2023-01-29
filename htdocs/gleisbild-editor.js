@@ -1,6 +1,7 @@
 class Gleisbild {
     constructor (element, mode, save = '{"settings":{"width":30,"height":50,"zoom":0.2,"x":0,"y":0},"elements":[]}') {
         if (!element) throw new Error('Please provide an element!')
+        this.argsAtStart = [element, mode]
         if (typeof element === 'string') element = document.querySelector(element)
         this.element = element
         this.mode = mode
@@ -300,6 +301,19 @@ class Gleisbild {
         preload()
     }
 
+    reconstruct () {
+        const newGB = new this.constructor(...this.argsAtStart, this.export())
+        const p = this
+        newGB.on('change', () => {
+            p.dispatch('change')
+        })
+        this.export = () => {
+            return newGB.export()
+        }
+        this.on = newGB.on
+        return newGB
+    }
+
     dispatch (event) {
         if (!this.eventHandlers[event]) this.eventHandlers[event] = []
         for (const handler of this.eventHandlers[event]) {
@@ -353,6 +367,7 @@ class Gleisbild {
         const elementData = this.save.elements.filter(e => e.x === x && e.y === y)[0]
         const { rotation, properties, type } = elementData
         const svgCode = this.elementList[type].svgCode
+        const p = this
         
         field.innerHTML = `
             ${svgCode}
@@ -360,10 +375,18 @@ class Gleisbild {
         if (field.querySelector('svg')) {
             field.querySelector('svg').setAttribute('width', 640 * this.zoom)
             field.querySelector('svg').setAttribute('height', 400 * this.zoom)
+            field.querySelector('svg').style.transform = `rotate(${rotation}deg)`
             for (const path of field.querySelector('svg').querySelectorAll('path')) {
                 if (!path.getAttribute('original-stroke-width')) path.setAttribute('original-stroke-width', path.style.strokeWidth)
                 path.style.strokeWidth = path.getAttribute('original-stroke-width') * this.zoom
             }
+            field.querySelector('svg .gbc-cog').addEventListener('click', () => {
+                document.body.innerHTML += `
+                    <div class="gbc-epcc">
+                        <h2>${p.elementList[type].name}</h2>
+                    </div>
+                `
+            })
         }
     }
 
@@ -463,6 +486,11 @@ class Gleisbild {
         window.gbESa = true
         document.querySelector('head').innerHTML += `
             <style>
+                .gbc-cog:hover {
+                    fill: #b83434 !important;
+                    cursor: pointer;
+                }
+
                 .gbc {
                     background: #fff;
                     position: relative;
@@ -569,6 +597,25 @@ class Gleisbild {
                 }
                 .gbc.edit-mode .gbc-field {
                     border: 1px solid gray;
+                }
+
+                .gbc-epcc {
+                    position: fixed;
+                    bottom: 3vh;
+                    right: 3vh;
+                    background: #fff;
+                    color: #000;
+                    padding: 3%;
+                    border: 1px solid #b83434;
+                    border-radius: 15px;
+                    display: flex;
+                    justify-content: space-evenly;
+                    align-items: center;
+                    flex-direction: column;
+                }
+                .gbc-epcc h2 {
+                    color: #b83434;
+                    margin-bottom: 1%;
                 }
             </style>
         `
