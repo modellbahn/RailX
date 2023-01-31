@@ -1,5 +1,11 @@
 class Gleisbild {
     constructor (element, mode, save = '{"settings":{"width":30,"height":50,"zoom":0.2,"x":0,"y":0},"elements":[]}') {
+        this.eventHandlers = {}
+        this.interactiveHandlerId = 0
+        this.build(element, mode, save)
+    }
+
+    build (element, mode, save) {
         if (!element) throw new Error('Please provide an element!')
         this.argsAtStart = [element, mode]
         if (typeof element === 'string') element = document.querySelector(element)
@@ -11,8 +17,9 @@ class Gleisbild {
         this.x = this.save.settings.x || 0
         this.y = this.save.settings.y || 0
         this.elements = this.save.elements || []
-        this.eventHandlers = {}
         this.id = ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16))
+        this.interactiveHandlerId += 1
+        const myInteractiveHandlerId = this.interactiveHandlerId
 
         element.classList.add('gleisbild-container')
         element.classList.add('gbc')
@@ -201,6 +208,7 @@ class Gleisbild {
         const threshold = 0.001
         document.querySelector(`.gbc-${this.id}`).addEventListener('wheel', (e) => {
             if (window.gbeionfdo) return
+            if (p.interactiveHandlerId > myInteractiveHandlerId) return
             e.preventDefault()
             if (e.deltaY < 0) {
                 p.zoom += 0.01
@@ -213,6 +221,7 @@ class Gleisbild {
         })
 
         document.querySelector(`.gbc-${this.id}`).addEventListener('touchstart', (event) => {
+            if (p.interactiveHandlerId > myInteractiveHandlerId) return
             if (event.touches.length === 2) {
                 event.preventDefault();
                 window.gbeionfdo = true
@@ -221,6 +230,7 @@ class Gleisbild {
         })
 
         document.querySelector(`.gbc-${this.id}`).addEventListener('touchmove', (event) => {
+            if (p.interactiveHandlerId > myInteractiveHandlerId) return
             event.preventDefault();
             if (event.touches.length === 2) {
                 if (Math.abs(event.scale - 1) > threshold) {
@@ -231,6 +241,7 @@ class Gleisbild {
         })
 
         document.querySelector(`.gbc-${this.id}`).addEventListener('touchend', (event) => {
+            if (p.interactiveHandlerId > myInteractiveHandlerId) return
             window.gbeionfdo = false
             tzInitialDistance = null
         })
@@ -241,16 +252,19 @@ class Gleisbild {
         let tmLastMovementY = 0
 
         document.querySelector(`.gbc-${this.id}`).addEventListener('mousedown', (e) => {
+            if (p.interactiveHandlerId > myInteractiveHandlerId) return
             isMouseDown = true
             targetsElem = e.target.closest(`.gbc-${this.id}`) !== null
         })
 
         document.addEventListener('mouseup', () => {
+            if (p.interactiveHandlerId > myInteractiveHandlerId) return
             isMouseDown = false
             targetsElem = false
         })
 
         document.addEventListener('mousemove', (e) => {
+            if (p.interactiveHandlerId > myInteractiveHandlerId) return
             if (isMouseDown && targetsElem && !window.gbeionfdo) {
                 p.x += e.movementX
                 p.y += e.movementY
@@ -260,6 +274,7 @@ class Gleisbild {
 
         // Add touch event listeners
         document.querySelector(`.gbc-${this.id}`).addEventListener('touchstart', (e) => {
+            if (p.interactiveHandlerId > myInteractiveHandlerId) return
             if (e.touches.length !== 1) return
             isMouseDown = true
             targetsElem = e.target.closest(`.gbc-${this.id}`) !== null
@@ -268,11 +283,13 @@ class Gleisbild {
         })
 
         document.addEventListener('touchend', () => {
+            if (p.interactiveHandlerId > myInteractiveHandlerId) return
             isMouseDown = false
             targetsElem = false
         })
 
         document.addEventListener('touchmove', (e) => {
+            if (p.interactiveHandlerId > myInteractiveHandlerId) return
             if (isMouseDown && targetsElem && !window.gbeionfdo) {
                 const touch = e.touches[0];
                 let movementX = touch.clientX - tmLastMovementX;
@@ -288,7 +305,7 @@ class Gleisbild {
 
 
         var all = ['/gleisbild/abteil.png', '/gleisbild/curve-down.png', '/gleisbild/curve-up.png', '/gleisbild/detector.png', '/gleisbild/entkupplungsgleis.png', '/gleisbild/portal.png', '/gleisbild/prellbock.png', '/gleisbild/signal.png', '/gleisbild/station.png', '/gleisbild/weiche-links.png', '/gleisbild/weiche-rechts.png',]
-        function onAllImagesLoaded() {}
+        function onAllImagesLoaded() { }
         function preload() {
             var i = new Image()
             var src = all.pop()
@@ -302,28 +319,13 @@ class Gleisbild {
         preload()
 
         ;(new MutationObserver(() => {
+            if (p.interactiveHandlerId > myInteractiveHandlerId) return
             p.reconstruct()
-        })).observe(document.body, { characterData: false, childList: true, attributes: false })
+        })).observe(document.body, { characterData: false, childList: true, attributes: false });
     }
 
     reconstruct () {
-        const newGB = new this.constructor(...this.argsAtStart, this.export())
-        const p = this
-        newGB.on('change', () => {
-            p.dispatch('change')
-        })
-        this.export = () => {
-            return newGB.export()
-        }
-        this.on = newGB.on
-        this.setElemArray = (arr) => {
-            return newGB.setElemArray(arr)
-        }
-        return newGB
-    }
-
-    setElemArray (arr) {
-        this.elements = arr
+        this.build(...this.argsAtStart, this.export())
     }
 
     dispatch (event, value = null) {
@@ -385,9 +387,7 @@ class Gleisbild {
             ${svgCode}
         `
 
-        console.log(rotation)
         if (rotation === 180) {
-            console.log(field)
             document.querySelector(`.gbc-${this.id} .gbc-field[data-gbf-column="${x}"][data-gbf-row="${y}"]`).classList.add('gbc-rotate-180')
         } else {
             document.querySelector(`.gbc-${this.id} .gbc-field[data-gbf-column="${x}"][data-gbf-row="${y}"]`).classList.remove('gbc-rotate-180')
@@ -407,16 +407,17 @@ class Gleisbild {
                         <button class="gbc-epcc-rotate-btn">Drehen</button>
                     </div>
                 `
-                document.querySelector('.gbc-epcc-rotate-btn').addEventListener('click', function gbcel4 () {
+                
+                document.querySelectorAll('.gbc-epcc-rotate-btn')[document.querySelectorAll('.gbc-epcc-rotate-btn').length - 1].addEventListener('click', function gbcel4 () {
                     let arr = []
                     for (let item of p.save.elements) {
                         if (item.x === x && item.y === y) {
                             item.rotation += 180
-                            if (item.rotation > 360) item.rotation -= 360
+                            if (item.rotation !== 180) item.rotation = 0
                         }
                         arr.push(item)
                     }
-                    p.setElemArray(arr)
+                    p.save.elements = arr
                     p.dispatch('rotation-change')
                     p.dispatch('field-change')
                     p.dispatch('change')
