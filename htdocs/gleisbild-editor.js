@@ -25,7 +25,7 @@ class Gleisbild {
         element.classList.add('gbc')
         element.classList.add(`gbc-${this.id}`)
         if (this.showControls) element.classList.add('edit-mode')
-        element.innerHTML = '<div class="gbc-fieldmap"></div>'
+        element.innerHTML = '<div class="gbc-fieldmap"></div><button class="gbc-togglemodebtn"><i class="fa-solid fa-book-open"></i></button>'
         const fm = element.querySelector('.gbc-fieldmap')
         this.fm = fm
 
@@ -356,22 +356,24 @@ class Gleisbild {
         let p = this
         if (this.showControls) {
             // Add button to toggle between modes
-            (document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`) || { outerHTML: '' }).outerHTML = ''
-            document.querySelector(`.gbc-${this.id}`).innerHTML += `<button class="gbc-togglemodebtn"><i class="fa-solid fa-book-open"></i></button>`
-            document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`).addEventListener('click', function gbcel2 () {
-                if (this.showControls) {
-                    this.showControls = false
-                    this.mode = 'view'
-                    document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`).innerHTML = '<i class="fa-solid fa-pen"></i>'
+            const btn = document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`)
+            btn.style.display = 'block'
+            btn.addEventListener('click', function gbcel2 () {
+                if (p.showControls) {
+                    p.showControls = false
+                    p.mode = 'view'
+                    btn.innerHTML = '<i class="fa-solid fa-pen"></i>'
                     p.removeEmptyFields()
                 } else {
-                    this.showControls = true
-                    this.mode = 'edit'
-                    document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`).innerHTML = '<i class="fa-solid fa-book-open"></i>'
+                    p.showControls = true
+                    p.mode = 'edit'
+                    btn.innerHTML = '<i class="fa-solid fa-book-open"></i>'
                     p.renderEmptyFields()
                 }
-                document.querySelector(`.gbc-${this.id}`).classList.toggle('edit-mode')
+                document.querySelector(`.gbc-${p.id}`).classList.toggle('edit-mode')
             })
+        } else {
+            document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`).style.display = 'none'
         }
     }
 
@@ -533,6 +535,7 @@ class Gleisbild {
                     background: #fff;
                     position: relative;
                     overflow: hidden;
+                    box-sizing: border-box;
                 }
                 .gbc-togglemodebtn {
                     position: absolute;
@@ -615,8 +618,8 @@ class Gleisbild {
                 .gbc-hidden {
                     display: none;
                 }
-                .gbc-field {
-                    
+                .gbc.edit-mode .gbc-field svg {
+                    transform: translate(-1px, -0.8px);
                 }
                 .gbc-empty-field {
                     display: flex;
@@ -635,6 +638,13 @@ class Gleisbild {
                 }
                 .gbc.edit-mode .gbc-field {
                     border: 1px solid gray;
+                }
+
+                .gbc-cog {
+                    display: none;
+                }
+                .gbc.edit-mode .gbc-cog {
+                    display: block;
                 }
 
                 .gbc-epcc {
