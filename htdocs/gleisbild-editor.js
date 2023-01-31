@@ -403,13 +403,18 @@ class Gleisbild {
                 path.style.strokeWidth = path.getAttribute('original-stroke-width') * this.zoom
             }
             field.querySelector('svg .gbc-cog').addEventListener('click', function gbcel3 () {
+                const cogid = ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16))
                 document.body.innerHTML += `
-                    <div class="gbc-epcc">
-                        <h2>${p.elementList[type].name}</h2>
+                    <div class="gbc-epcc" id="gbcc-${cogid}">
+                        <h2>${p.elementList[type].name} <button class="gbc-epcc-close-btn"><i class="fa-solid fa-circle-xmark"></i></button></h2>
                         <button class="gbc-epcc-rotate-btn">Drehen</button>
                     </div>
                 `
-                
+
+                document.querySelectorAll('.gbc-epcc-close-btn')[document.querySelectorAll('.gbc-epcc-close-btn').length - 1].addEventListener('click', () => {
+                    document.querySelector(`#gbcc-${cogid}`).outerHTML = ''
+                })
+
                 document.querySelectorAll('.gbc-epcc-rotate-btn')[document.querySelectorAll('.gbc-epcc-rotate-btn').length - 1].addEventListener('click', function gbcel4 () {
                     let arr = []
                     for (let item of p.save.elements) {
@@ -661,9 +666,35 @@ class Gleisbild {
                     align-items: center;
                     flex-direction: column;
                 }
+                .gbc-epcc button {
+                    padding: 1%;
+                    color: #b83434;
+                    border: 1px solid #b83434;
+                    background: #fff;
+                    outline: none;
+                    border-radius: 5px;
+                }
+                .gbc-epcc button:hover {
+                    cursor: pointer;
+                    background: #b83434;
+                    color: #fff;
+                }
                 .gbc-epcc h2 {
                     color: #b83434;
                     margin-bottom: 1%;
+                }
+                .gbc-epcc h2 button {
+                    outline: none;
+                    background: #fff;
+                    color: #cc5858;
+                    padding: 0;
+                    font-size: 1em;
+                    border: none;
+                }
+                .gbc-epcc h2 button:hover {
+                    color: #b83434;
+                    cursor: pointer;
+                    background: #fff;
                 }
                 .gbc-rotate-180 {
                     transform: rotate(180deg) !important;
