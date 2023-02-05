@@ -408,6 +408,8 @@ class Gleisbild {
                     <div class="gbc-epcc" id="gbcc-${cogid}">
                         <h2>${p.elementList[type].name} <button class="gbc-epcc-close-btn"><i class="fa-solid fa-circle-xmark"></i></button></h2>
                         <button class="gbc-epcc-rotate-btn">Drehen</button>
+                        <br>
+                        <button class="gbc-epcc-delete-btn">Entfernen</button>
                     </div>
                 `
 
@@ -415,16 +417,25 @@ class Gleisbild {
                     document.querySelector(`#gbcc-${cogid}`).outerHTML = ''
                 })
 
+                document.querySelectorAll('.gbc-epcc-delete-btn')[document.querySelectorAll('.gbc-epcc-delete-btn').length - 1].addEventListener('click', () => {
+                    let arr = p.elements.filter((it) => { return !(it.x.toString() == x.toString() && y.toString() == it.y.toString()) })
+                    p.elements = arr
+                    p.dispatch('field-change')
+                    p.dispatch('change')
+                    document.querySelector(`.gbc-${p.id} .gbc-field[data-gbf-row="${y}"][data-gbf-column="${x}"]`).innerHTML = ''
+                    p.renderEmptyFields()
+                })
+
                 document.querySelectorAll('.gbc-epcc-rotate-btn')[document.querySelectorAll('.gbc-epcc-rotate-btn').length - 1].addEventListener('click', function gbcel4 () {
                     let arr = []
-                    for (let item of p.save.elements) {
+                    for (let item of p.elements) {
                         if (item.x === x && item.y === y) {
                             item.rotation += 180
                             if (item.rotation !== 180) item.rotation = 0
                         }
                         arr.push(item)
                     }
-                    p.save.elements = arr
+                    p.elements = arr
                     p.dispatch('rotation-change')
                     p.dispatch('field-change')
                     p.dispatch('change')
