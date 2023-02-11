@@ -25,7 +25,7 @@ class Gleisbild {
         element.classList.add('gbc')
         element.classList.add(`gbc-${this.id}`)
         if (this.showControls) element.classList.add('edit-mode')
-        element.innerHTML = '<div class="gbc-fieldmap"></div><button class="gbc-togglemodebtn"><i class="fa-solid fa-book-open"></i></button>'
+        element.innerHTML = '<div class="gbc-fieldmap"></div><button class="gbc-togglemodebtn"><i class="fa-solid fa-book-open"></i><button class="gbc-changesizebtn"><i class="fa-solid fa-maximize"></i></button>'
         const fm = element.querySelector('.gbc-fieldmap')
         this.fm = fm
 
@@ -372,8 +372,40 @@ class Gleisbild {
                 }
                 document.querySelector(`.gbc-${p.id}`).classList.toggle('edit-mode')
             })
+
+            // Add button for changing size
+            const btn2 = document.querySelector(`.gbc-${this.id} .gbc-changesizebtn`)
+            btn2.style.display = 'block'
+            btn2.addEventListener('click', () => {
+                let tries = 0
+                let startWidth = this.save.settings.width
+                let startHeight = this.save.settings.height
+                let width
+                let height
+
+                // Width
+                while (Number.isNaN(parseInt(width))) {
+                    if (tries > 0) alert('Bitte nur Nummern eingeben!')
+                    width = parseInt(prompt('Breite eingeben: ', startWidth))
+                    tries++
+                }
+                tries = 0
+
+                // Height
+                while (Number.isNaN(parseInt(height))) {
+                    if (tries > 0) alert('Bitte nur Nummern eingeben!')
+                    height = parseInt(prompt('Höhe eingeben: ', startHeight))
+                    tries++
+                }
+                tries = 0
+
+                this.save.settings.width = width
+                this.save.settings.height = height
+                p.reconstruct()
+            })
         } else {
             document.querySelector(`.gbc-${this.id} .gbc-togglemodebtn`).style.display = 'none'
+            document.querySelector(`.gbc-${this.id} .gbc-changesizebtn`).style.display = 'none'
         }
     }
 
@@ -424,6 +456,7 @@ class Gleisbild {
                     p.dispatch('change')
                     document.querySelector(`.gbc-${p.id} .gbc-field[data-gbf-row="${y}"][data-gbf-column="${x}"]`).innerHTML = ''
                     p.renderEmptyFields()
+                    document.querySelector(`#gbcc-${cogid}`).outerHTML = ''
                 })
 
                 document.querySelectorAll('.gbc-epcc-rotate-btn')[document.querySelectorAll('.gbc-epcc-rotate-btn').length - 1].addEventListener('click', function gbcel4 () {
@@ -507,6 +540,8 @@ class Gleisbild {
         const elem = document.querySelector(`.gbc-${this.id}`)
         const fm = elem.querySelector('.gbc-fieldmap')
 
+        if (this.zoom <= 0) this.zoom = 0.005
+
         fm.style.width = `${640 * this.zoom * this.save.settings.width}px`
         fm.style.height = `${400 * this.zoom * this.save.settings.height}px`
         for (const field of elem.querySelectorAll('.gbc-field')) {
@@ -553,16 +588,46 @@ class Gleisbild {
                     overflow: hidden;
                     box-sizing: border-box;
                 }
-                .gbc-togglemodebtn {
+
+                .gbc-changesizebtn {
                     position: absolute;
-                    bottom: 2%;
-                    right: 2%;
+                    top: 1vh;
+                    right: 1vh;
                     outline: none;
                     border: 2px solid #b83434;
                     background: #fff;
                     color: #cc5858;
-                    padding: 1%;
-                    border-radius: 100vw;
+                    border-radius: 10000px;
+                    text-align: center;
+                    padding: 1vh;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 5vh;
+                    height: 5vh;
+                }
+                .gbc-changesizebtn:hover {
+                    background: #b83434;
+                    color: #fff;
+                    cursor: pointer;
+                }
+
+                .gbc-togglemodebtn {
+                    position: absolute;
+                    bottom: 1vh;
+                    right: 1vh;
+                    outline: none;
+                    border: 2px solid #b83434;
+                    background: #fff;
+                    color: #cc5858;
+                    border-radius: 10000px;
+                    text-align: center;
+                    padding: 1vh;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 5vh;
+                    height: 5vh;
                 }
                 .gbc-togglemodebtn:hover {
                     background: #b83434;
