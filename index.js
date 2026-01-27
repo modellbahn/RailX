@@ -36,6 +36,6 @@ io.on('connection', (socket) => {
     })
 })
 
-server.listen(80, () => {
-    console.log('listening on *:80')
+server.listen(8070, () => {
+    console.log('listening on *:8070')
 })
