@@ -1,0 +1,4 @@
+onlyBuiltDependencies:
+  - '@serialport/bindings'
+  - '@serialport/bindings-cpp'
+  - serialport
